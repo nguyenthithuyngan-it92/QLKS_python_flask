@@ -1,0 +1,32 @@
+* {
+    font-family: Tahoma;
+}
+
+h1.subject{
+    text-align: center;
+    margin: 10px 0;
+    padding: 50px;
+    background-position: top;
+    background-repeat: no-repeat;
+    text-shadow: 5px 5px 3px #120364;
+    font-size: 50px;
+}
+
+.container{
+    width: 90%;
+    margin: 0 auto; #căn giữa
+}
+
+.nav-item {
+    font-size: 12px;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.btn {
+    padding: 10px;
+    margin: 15px 0 ; #căn giữa
+    display: flex;
+}
