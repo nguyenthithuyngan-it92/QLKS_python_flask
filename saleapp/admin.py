@@ -106,7 +106,7 @@ class MyAdminIndexView(AdminIndexView):
         return self.render('admin/index.html',
                            stats=utils.category_stats())
 
-
+# Hello dday chi de test su thay doi
 admin = Admin(app=app, name='Administrator',
               template_mode='bootstrap4',
               index_view=MyAdminIndexView())
