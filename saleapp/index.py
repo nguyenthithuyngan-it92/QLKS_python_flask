@@ -19,15 +19,23 @@ def load_user(user_id):
 
 @app.route('/admin-login', methods=['POST'])
 def admin_login():
-    username = request.form.get('username')
-    password = request.form.get('password')
+    try:
+        username = request.form.get('username')
+        password = request.form.get('password')
 
-    user = utils.check_login(username=username, password=password,
-                             role=UserRole.ADMIN)
-    if user:
-        login_user(user=user)
+        user = utils.check_login(username=username, password=password,
+                                 role=UserRole.ADMIN)
 
-    return redirect('/admin')
+        if user:
+            login_user(user=user)
+
+            return redirect('/admin')
+        else:
+            error_msg = "Đăng nhập sai quyền! Vui lòng đăng nhập với quyền ADMIN!!!"
+    except Exception as ex:
+        error_msg = "Hệ thống đang có lỗi " + str(ex)
+
+    return render_template("login.html", error_msg=error_msg)
 
 
 @app.route("/register", methods=['get', 'post'])
@@ -38,6 +46,7 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         confirm = request.form.get('confirm')
+        phone = request.form.get('phone')
         email = request.form.get('email')
         avatar_path = None
 
@@ -49,7 +58,7 @@ def register():
                     avatar_path = res['secure_url']
 
                 utils.add_user(name=name, username=username, password=password,
-                               email=email, avatar=avatar_path)
+                               phone=phone, email=email, avatar=avatar_path)
 
                 return redirect(url_for('user_signin'))
             else:
@@ -76,7 +85,6 @@ def user_signin():
                 next = request.args.get('next', 'home')
                 return redirect(url_for(next))
 
-                #return redirect(url_for('home'))
             else:
                 error_msg = "Username hoặc mật khẩu chưa chính xác!!!"
 

@@ -2,8 +2,11 @@
 
 {% block title %}ĐĂNG NHẬP NGƯỜI DÙNG{% endblock %}
 
+{% block header %}
+{% endblock %}
+
 {% block content %}
-<h1 class="subject text-center text-danger">ĐĂNG NHẬP NGƯỜI DÙNG</h1>
+<h1 class="subject text-center text-danger">ĐĂNG NHẬP</h1>
 
 {% if error_msg %}
 <div class="alert alert-danger">
@@ -24,6 +27,8 @@
 
     <input type="submit" value="Đăng nhập" class="btn btn-success"/>
 </form>
+    <h6><a href="{{ url_for('register', next='user_signin') }}">Bạn chưa có tài khoản? Đăng ký tại đây!!</a></h6>
+{% endblock %}
 
-
+{% block footer %}
 {% endblock %}

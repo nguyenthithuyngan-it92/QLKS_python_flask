@@ -1,6 +1,6 @@
 import json, os
 from saleapp import app, db
-from saleapp.models import Category, Room, User, UserRole
+from saleapp.models import Category, Room, UserRole, User
 import hashlib  #băm password
 from saleapp.models import User
 from sqlalchemy import func
@@ -11,6 +11,7 @@ def add_user(name, username, password, **kwargs):
     user = User(name=name.strip(),
                 username=username.strip(),
                 password=password,
+                phone=kwargs.get('phone'),
                 email=kwargs.get('email'),
                 avatar=kwargs.get('avatar'))
 
@@ -31,7 +32,7 @@ def check_login(username, password, role=UserRole.USER):
                                  User.user_role.__eq__(role)).first()
 
 
-def category_stats():    #thống kê theo danh mục
+def category_stats():    #thống kê theo loại phòng
     return db.session.query(Category.id, Category.name, func.count(Room.id))\
         .join(Room, Category.id.__eq__(Room.category_id), isouter=True)\
         .group_by(Category.id, Category.name).all()

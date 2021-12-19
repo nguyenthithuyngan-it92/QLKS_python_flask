@@ -1,5 +1,5 @@
 from saleapp import db, app, utils
-from saleapp.models import Category, Room, User, UserRole, Employee, Customer
+from saleapp.models import Category, Room, UserRole, Employee, Customer, User
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import BaseView, expose, Admin, AdminIndexView
 from flask_login import logout_user, current_user, login_user
@@ -74,7 +74,7 @@ class EmployeeView(BasicView):
 
 
 class CustomerView(BasicView):
-    can_create = False  #tắt chức năng tạo
+    #can_create = False  #tắt chức năng tạo
 
     column_searchable_list = ['name', 'identity_card', 'phone']  # bật box tìm kiếm
     column_sortable_list = ['name']  # sắp xếp
@@ -83,7 +83,9 @@ class CustomerView(BasicView):
         'name': 'Họ tên khách hàng',
         'phone': 'Số điện thoại',
         'address': 'Địa chỉ',
-        'identity_card': 'Số CMND/CCCD'
+        'identity_card': 'Số CMND/CCCD',
+        'customertype': 'Loại KH',
+        'reservation': 'Mã phiếu thuê phòng'
     }
 
 
@@ -106,7 +108,7 @@ class MyAdminIndexView(AdminIndexView):
         return self.render('admin/index.html',
                            stats=utils.category_stats())
 
-# Hello dday chi de test su thay doi
+
 admin = Admin(app=app, name='Administrator',
               template_mode='bootstrap4',
               index_view=MyAdminIndexView())

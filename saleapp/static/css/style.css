@@ -30,3 +30,58 @@ h1.subject{
     margin: 15px 0 ; #căn giữa
     display: flex;
 }
+
+/*header*/
+
+.navbar-search {
+    display: flex;
+    margin: 0;
+    padding-right: 20px;
+    background-color: rgba(0, 0, 0, 0.1)
+}
+
+.nav-link {
+    font-size: 15px;
+}
+
+/*footer*/
+h5{
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 1px;
+}
+
+.icon{
+    padding: 5px;
+    width: 50px;
+}
+
+.jumbotron{
+    margin: 5px;
+    padding: 10px;
+    text-align: center;
+    background-color: rgb(204, 255, 204); /* rgb(160, 218, 169) */
+}
+
+p.footer {
+    margin: 0;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+li.nav-item {
+    font-size: 15px;
+}
+
+li.nav-item a {
+    text-decoration: none;
+    color: black;
+}
+
+iframe{
+    width: 90%;
+    margin: 15px 0;
+}

@@ -1,8 +1,35 @@
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark flex-row-reverse">
 
-    {% if current_user.is_authenticated %}
+<nav class="navbar header navbar-expand-md bg-dark navbar-dark">
+  <!-- Brand -->
+  <a class="navbar-brand" href="#">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width:50px;" class="rounded" />
+  </a>
+
+  <!-- Toggler/collapsibe Button -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <!-- Navbar links -->
+  <div class="collapse navbar-collapse align-items-center" id="collapsibleNavbar">
+    <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link text-danger" href="{{ url_for('home') }}">
+        <a class="nav-link {% if 'category_id' not in request.args %}active{% endif %}" href="/">TRANG CHỦ</a>
+      </li>
+
+      {% for c in categories %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('home', category_id=c.id) }}">{{ c.name }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="collapse navbar-collapse d-flex justify-content-end align-items-center">
+    <ul class="navbar-nav">
+      {% if current_user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link text-primary" href="{{ url_for('home') }}">
           {% if current_user.avatar %}
             <img src="{{ current_user.avatar }}" class="rounded-circle" width="30" alt="current_user.name" />
           {% else %}
@@ -25,41 +52,15 @@
         <a class="nav-link text-success" href="{{ url_for('user_signin') }}">ĐĂNG NHẬP</a>
       </li>
       {% endif %}
-
-    </ul>
-
-  </div>
-</nav>
-
-<nav class="navbar navbar-expand-md bg-dark navbar-dark sticky-top">
-  <!-- Brand -->
-  <a class="navbar-brand" href="#">
-    <img src="{{ url_for('static', filename='images/default.png') }}" alt="Logo" style="width:40px;">
-  </a>
-
-  <!-- Toggler/collapsibe Button -->
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <!-- Navbar links -->
-  <div class="collapse navbar-collapse" id="collapsibleNavbar">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link {% if 'category_id' not in request.args %}active{% endif %}" href="/">TRANG CHỦ</a>
-      </li>
-
-      {% for c in categories %}
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('home', category_id=c.id) }}">{{ c.name }}</a>
-      </li>
-      {% endfor %}
-
-
-    <form class="form-inline">
-      <input class="form-control mr-sm-2" name="keyword" type="text" placeholder="Nhập từ khóa cần tìm...">
-      <button class="btn btn-success" type="submit">TÌM KIẾM</button>
-    </form>
     </ul>
   </div>
 </nav>
+
+<nav class="navbar-search navbar-expand-sm flex-row-reverse sticky-top">
+  <form class="form-inline">
+    <input class="form-control mr-sm-2" name="keyword" type="text" placeholder="Nhập từ khóa cần tìm...">
+    <button class="btn btn-success" type="submit">TÌM KIẾM</button>
+  </form>
+
+</nav>
+
