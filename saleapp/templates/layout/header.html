@@ -1,5 +1,5 @@
 
-<nav class="navbar header navbar-expand-md bg-dark navbar-dark">
+<nav class="navbar header navbar-expand-md bg-dark navbar-dark sticky-top">
   <!-- Brand -->
   <a class="navbar-brand" href="/">
     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width:50px;" class="rounded" />
@@ -17,11 +17,25 @@
         <a class="nav-link {% if 'category_id' not in request.args %}active{% endif %}" href="/">TRANG CHỦ</a>
       </li>
 
-      {% for c in categories %}
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('home', category_id=c.id) }}">{{ c.name }}</a>
+        <!-- Dropdown -->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+          LOẠI PHÒNG
+        </a>
+
+        <div class="dropdown-menu">
+          {% for c in categories %}
+            <a class="dropdown-item nav-link"
+             href="{{ url_for('home', category_id=c.id) }}">{{ c.name }}</a>
+          {% endfor %}
+        </div>
       </li>
-      {% endfor %}
+
+      <form class="search form-inline">
+        <input class="form-control mr-sm-2" name="keyword" type="text" placeholder="Nhập từ khóa cần tìm...">
+        <button class="btn btn-success" type="submit">TÌM KIẾM</button>
+      </form>
+
     </ul>
   </div>
 
@@ -52,15 +66,10 @@
         <a class="nav-link text-success" href="{{ url_for('user_signin') }}">ĐĂNG NHẬP</a>
       </li>
       {% endif %}
+
     </ul>
   </div>
 </nav>
 
-<nav class="navbar-search navbar-expand-sm flex-row-reverse sticky-top">
-  <form class="form-inline">
-    <input class="form-control mr-sm-2" name="keyword" type="text" placeholder="Nhập từ khóa cần tìm...">
-    <button class="btn btn-success" type="submit">TÌM KIẾM</button>
-  </form>
 
-</nav>
 

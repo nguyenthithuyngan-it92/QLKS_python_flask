@@ -1,3 +1,4 @@
+import math
 from flask import render_template, request, redirect, url_for, session, jsonify
 from saleapp import app, login
 import utils
@@ -9,7 +10,22 @@ from saleapp.models import UserRole
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    cate_id = request.args.get('category_id')
+    kw = request.args.get('keyword')
+    # page = request.args.get('page', 1)
+    rooms = utils.load_rooms(cate_id=cate_id, kw=kw)
+    # rooms = utils.load_rooms(cate_id=cate_id, kw=kw, page=int(page))
+    # counter = utils.count_rooms()
+
+    return render_template("index.html",
+                           rooms=rooms)
+
+
+@app.context_processor
+def general_info(): #thông tin chung cần hiển thị mọi trang
+    return {
+        'categories': utils.load_categories(),  #ds danh mục
+    }
 
 
 @login.user_loader
@@ -79,11 +95,14 @@ def user_signin():
             password = request.form.get('password')
 
             user = utils.check_login(username=username, password=password)
+
             if user:
                 login_user(user=user)
 
-                next = request.args.get('next', 'home')
-                return redirect(url_for(next))
+                if 'room_id' in request.args:
+                    return redirect(url_for(request.args.get('next', 'home'), room_id=request.args['room_id']))
+
+                return redirect(url_for(request.args.get('next', 'home')))
 
             else:
                 error_msg = "Username hoặc mật khẩu chưa chính xác!!!"
@@ -98,6 +117,56 @@ def user_signin():
 def user_signout():
     logout_user()
     return redirect(url_for('user_signin'))
+
+
+@app.route("/rooms")
+def rooms_list():
+    cate_id = request.args.get("category_id")
+    kw = request.args.get("keyword")
+    from_price = request.args.get("from_price")
+    to_price = request.args.get("to_price")
+
+    rooms = utils.load_rooms(cate_id=cate_id, kw=kw,
+                                   from_price=from_price,
+                                   to_price=to_price)
+
+    return render_template("rooms.html",
+                           rooms=rooms)
+
+
+@app.route("/rooms/<int:room_id>")
+def room_detail(room_id):     #xem chi tiết sp
+    room = utils.get_room_by_id(room_id)
+    comments = utils.get_comments(room_id=room_id,
+                                  page=int(request.args.get('page', 1)))
+
+    return render_template("room_detail.html",
+                           comments=comments,
+                           room=room,
+                           pages=math.ceil(utils.count_comment(room_id=room_id)/app.config['COMMENT_SIZE']))
+
+
+@app.route('/api/comments', methods=['post'])
+@login_required     #bắt buộc đăng nhập mới được thực hiện
+def add_comment():
+    data = request.json
+    content = data.get('content')
+    room_id = data.get('room_id')
+
+    try:
+        c = utils.add_comment(content=content, room_id=room_id)
+    except:
+        return {'status': 404, 'err_msg': 'Chương trình đang bị lỗi!!!'}
+
+    return {'status': 201, 'comment': {
+        'id': c.id,
+        'content': c.content,
+        'created_date': c.created_date,
+        'user': {
+            'username': current_user.username,
+            'avatar': current_user.avatar
+        }
+    }}
 
 
 if __name__ == '__main__':

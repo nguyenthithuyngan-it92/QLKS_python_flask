@@ -21,6 +21,7 @@ class Category(BaseModel):
     __tablename__ = 'category'
 
     name = Column(String(50), nullable=False)
+
     rooms = relationship('Room', backref='category', lazy=True)
 
     def __str__(self):
@@ -36,9 +37,10 @@ class Room(BaseModel):
     active = Column(Boolean, default=True)
     image = Column(String(100))
     created_date = Column(DateTime, default=datetime.now())
-
     category_id = Column(Integer, ForeignKey('category.id'), nullable=False)
+
     reservationdetail = relationship('ReservationDetail', backref='room', lazy=True)
+    comments = relationship('Comment', backref='room', lazy=True)
 
     def __str__(self):
         return self.name
@@ -58,31 +60,28 @@ class User(BaseModel, UserMixin):
     user_role = Column(Enum(UserRole), default=UserRole.USER)
 
     reservationdetail = relationship('ReservationDetail', backref='user', lazy=True)
-    employee = relationship('Employee', backref='user', lazy=True)
+    receipt = relationship('ReceiptDetail', backref='user', lazy=True)
+    comments = relationship('Comment', backref='user', lazy=True)
 
     def __str__(self):
         return self.name
 
 
-class Employee(BaseModel):
-    __tablename__ = 'employee'
-
-    name = Column(String(50), nullable=False)
-    phone = Column(Integer, nullable=False)
-    email = Column(String(100))
-    joined_date = Column(DateTime, default=datetime.now())
-    position = Column(String(50), nullable=False)
-
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+class Comment(BaseModel):
+    room_id = Column(Integer, ForeignKey(Room.id), nullable=False, primary_key=True)
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
+    content = Column(String(255), nullable=False)
+    created_date = Column(DateTime, default=datetime.now())
 
     def __str__(self):
-        return self.name
+        return self.content
 
 
 class CustomerType(BaseModel):
     __tablename__ = 'customertype'
 
     name = Column(String(50), nullable=False)
+    coefficient = Column(Float, default=1)
     customer = relationship('Customer', backref='customertype', lazy=True)
 
 
@@ -91,12 +90,10 @@ class Customer(BaseModel):
 
     name = Column(String(50), nullable=False)
     identity_card = Column(Integer, unique=True)
-    phone = Column(Integer, nullable=False)
     address = Column(String(100))
     customertype_id = Column(Integer, ForeignKey('customertype.id'), nullable=False)
 
     reservation_id = Column(Integer, ForeignKey('reservationdetail.id'), nullable=False, primary_key=True)
-
 
     def __str__(self):
         return self.name
@@ -117,8 +114,8 @@ class ReservationDetail(BaseModel):  #phiếu đặt phòng
 class RentDetail(BaseModel): #phiếu thuê phòng
     __tablename__ = 'rentdetail'
 
-    reservation_id = Column(Integer, ForeignKey('reservationdetail.id'), nullable=False, primary_key=True)
-    room_id = Column(Integer, ForeignKey('room.id'), nullable=False, primary_key=True)
+    reservation_id = Column(Integer, ForeignKey('reservationdetail.id'), nullable=False)
+    room_id = Column(Integer, ForeignKey('room.id'), nullable=False)
     quantity = Column(Integer, default=0)
 
     receipt = relationship('ReceiptDetail', backref='rentdetail', lazy=True)
@@ -128,10 +125,26 @@ class ReceiptDetail(db.Model):  #hóa đơn
     __tablename__ = 'receiptdetail'
 
     rent_id = Column(Integer, ForeignKey('rentdetail.id'), nullable=False, primary_key=True)
-    employee_id = Column(Integer, ForeignKey('employee.id'), nullable=False, primary_key=True)
-    quantity = Column(Integer, default=0)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False, primary_key=True)
     unit_price = Column(Float, default=0)
 
 
+# class Policy(BaseModel):
+#     __abstract__ = True
+#
+#     name = Column(String(50), nullable=False)
+
+
 if __name__ == '__main__':
-    db.create_all()
+     db.create_all()
+
+    # c1 = Category(name='VIP1')
+    # c2 = Category(name='VIP2')
+    # c3 = Category(name='Normal')
+    #
+    # db.session.add(c1)
+    # db.session.add(c2)
+    # db.session.add(c3)
+    #
+    # db.session.commit()
+

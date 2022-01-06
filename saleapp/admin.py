@@ -1,5 +1,5 @@
 from saleapp import db, app, utils
-from saleapp.models import Category, Room, UserRole, Employee, Customer, User
+from saleapp.models import Category, Room, UserRole, Customer, User
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import BaseView, expose, Admin, AdminIndexView
 from flask_login import logout_user, current_user, login_user
@@ -59,29 +59,14 @@ class UserView(BasicView):
     }
 
 
-class EmployeeView(BasicView):
-    column_searchable_list = ['name', 'position']  # bật box tìm kiếm
-    column_sortable_list = ['name', 'joined_date']  # sắp xếp
-    column_labels = {
-        'id': 'Mã NV',
-        'name': 'Họ tên nhân viên',
-        'phone': 'Số điện thoại',
-        'email': 'Email',
-        'position': 'Chức vụ',
-        'joined_date': 'Ngày vào làm',
-        'user': 'Tên tài khoản'
-    }
-
-
 class CustomerView(BasicView):
     #can_create = False  #tắt chức năng tạo
 
-    column_searchable_list = ['name', 'identity_card', 'phone']  # bật box tìm kiếm
+    column_searchable_list = ['name', 'identity_card']  # bật box tìm kiếm
     column_sortable_list = ['name']  # sắp xếp
     column_labels = {
         'id': 'Mã KH',
         'name': 'Họ tên khách hàng',
-        'phone': 'Số điện thoại',
         'address': 'Địa chỉ',
         'identity_card': 'Số CMND/CCCD',
         'customertype': 'Loại KH',
@@ -116,7 +101,6 @@ admin = Admin(app=app, name='Administrator',
 
 admin.add_view(AuthenticatedModelView(Category, db.session, name='Loại phòng'))
 admin.add_view(RoomView(Room, db.session, name='Phòng'))
-admin.add_view(EmployeeView(Employee, db.session, name='Nhân viên'))
 admin.add_view(CustomerView(Customer, db.session, name='Khách hàng'))
 admin.add_view(UserView(User, db.session, name='Người dùng'))
 

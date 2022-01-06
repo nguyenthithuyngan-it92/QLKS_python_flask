@@ -3,18 +3,29 @@
 }
 
 h1.subject{
+    font-family: "Trirong", serif;
     text-align: center;
     margin: 10px 0;
-    padding: 50px;
     background-position: top;
     background-repeat: no-repeat;
     text-shadow: 5px 5px 3px #120364;
+    animation: doimau 0.8s ease-in infinite;
     font-size: 50px;
+    font-style: bold;
 }
 
-.container{
+@keyframes doimau{
+    from{
+        color:#4fb74a;
+
+    }
+    to{
+        color:#4fde4a;
+    }
+}
+.containers{
     width: 90%;
-    margin: 0 auto; #căn giữa
+    margin: 0 auto;
 }
 
 .nav-item {
@@ -27,21 +38,40 @@ h1.subject{
 
 .btn {
     padding: 10px;
-    margin: 15px 0 ; #căn giữa
-    display: flex;
+    margin: 15px;
+    display: block;
 }
 
 /*header*/
-
-.navbar-search {
-    display: flex;
-    margin: 0;
+.search {
     padding-right: 20px;
-    background-color: rgba(0, 0, 0, 0.1)
+    padding-left: 50px;
 }
 
 .nav-link {
     font-size: 15px;
+}
+
+.navbar-dark .navbar-nav .dropdown-menu .nav-link {
+    color: #343a40 !important;
+}
+
+/*menu con*/
+.dropdown-menu{
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s;
+    z-index: 999;
+}
+li:hover.dropdown .dropdown-menu{
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+a:hover.dropdown-item{
+    background-color: #0d8bf2!important;
 }
 
 /*footer*/
@@ -84,4 +114,49 @@ li.nav-item a {
 iframe{
     width: 90%;
     margin: 15px 0;
+}
+
+/*index*/
+.carousel {
+    margin: 5px;
+    padding: 40px;
+}
+
+div.info{
+    display: inline-block;
+    border: 1px solid #2aa22a;
+    box-shadow: 3px 3px 3px #99ff99;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 40px 10px 10px;
+}
+
+.card-img {
+    padding: 10px;
+    margin: 0 auto;
+}
+
+.container-fluid {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 10px 10px 20px;
+}
+
+h2.detail a {
+    text-decoration: none;
+    color: black;
+}
+
+/*room_detail*/
+.row {
+    padding: 10px;
+}
+
+div.comment p{
+    margin: 5px auto;
+}
+
+.form-info {
+    width: 70%;
+    margin: 0 auto;
 }
