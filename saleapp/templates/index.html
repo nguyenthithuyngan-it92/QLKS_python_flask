@@ -38,7 +38,7 @@
 
 {% for c in categories %}
 <div id="{{ url_for('home', category_id=c.id) }}" class="container-fluid ">
-    <h2 class="detail"><a href="javascript:;" id="{{ category_id }}">{{ c.name }}</a></h2>
+    <h2 id="cate-info{{ c.id }}" class="detail"><a href="javascript:;" id="{{ category_id }}">{{ c.name }}</a></h2>
 
     {% for r in rooms %}
     {% if rooms and c.id==r.category_id %}

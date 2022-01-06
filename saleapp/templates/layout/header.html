@@ -26,7 +26,7 @@
         <div class="dropdown-menu">
           {% for c in categories %}
             <a class="dropdown-item nav-link"
-             href="{{ url_for('home', category_id=c.id) }}">{{ c.name }}</a>
+             href="#cate-info{{ c.id }}">{{ c.name }}</a>
           {% endfor %}
         </div>
       </li>
