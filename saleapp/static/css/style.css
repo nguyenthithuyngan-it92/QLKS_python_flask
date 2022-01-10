@@ -18,7 +18,6 @@ h1.subject{
 @keyframes doimau{
     from{
         color:#4fb74a;
-
     }
     to{
         color:#4fde4a;
@@ -44,11 +43,6 @@ h1.subject{
 }
 
 /*header*/
-.search {
-    padding-right: 20px;
-    padding-left: 50px;
-}
-
 .nav-link {
     font-size: 15px;
 }
@@ -92,7 +86,7 @@ h5{
 
 .jumbotron{
     margin: 5px;
-    padding: 10px;
+    padding: 20px;
     text-align: center;
     background-color: rgb(204, 255, 204); /* rgb(160, 218, 169) */
 }
@@ -118,9 +112,34 @@ iframe{
 }
 
 /*index*/
+.search {
+    padding: 15px;
+    margin: 0 auto;
+
+}
+
+form.search input {
+    margin: 5px;
+    padding: 10px;
+    border-radius: 5px;
+    align-items: center;
+}
+
 .carousel {
     margin: 5px;
     padding: 40px;
+}
+
+@keyframes doimau2 {
+    0%{
+        box-shadow: 5px 5px 4px rgb(46, 184, 46);
+    }
+    50%{
+        box-shadow: 6px 6px 4px rgb(46, 184, 46);
+    }
+    100%{
+        box-shadow: 7px 7px 4px rgb(46, 184, 46);
+    }
 }
 
 div.info{
@@ -130,6 +149,10 @@ div.info{
     border-radius: 5px;
     padding: 10px;
     margin: 10px 40px 10px 10px;
+}
+
+div:hover.info {
+    animation: doimau2 0.8s linear infinite;
 }
 
 .card-img {
@@ -143,9 +166,39 @@ div.info{
     padding: 20px 10px 10px 20px;
 }
 
-h2.detail a {
+h2.detail a{
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+    background-image:-webkit-linear-gradient(left, rgb(51, 204, 51) 15%, rgb(153, 255, 102) 35%, rgb(255, 255, 153) 50%);
+    color: rgb(247, 7, 79);
+    font-weight: bold;
+    text-shadow: 1px 2px 2px black;
     text-decoration: none;
-    color: black;
+    border-radius: 5px;
+}
+/*rooms*/
+table.room{
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 15px;
+}
+
+table.room th {
+    padding: 10px;
+}
+
+table.room td {
+    padding: 10px;
+}
+
+.container-fluid-rooms {
+    width: 100%;
+    margin: 15px auto;
+    border: 1px solid #2aa22a;
+    border-radius: 5px;
 }
 
 /*room_detail*/
