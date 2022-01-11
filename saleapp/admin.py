@@ -60,7 +60,7 @@ class UserView(BasicView):
 
 
 class CustomerView(BasicView):
-    #can_create = False  #tắt chức năng tạo
+    can_create = False  #tắt chức năng tạo
 
     column_searchable_list = ['name', 'identity_card']  # bật box tìm kiếm
     column_sortable_list = ['name']  # sắp xếp

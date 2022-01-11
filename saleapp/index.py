@@ -25,6 +25,7 @@ def home():
 def general_info(): #thông tin chung cần hiển thị mọi trang
     return {
         'categories': utils.load_categories(),  #ds danh mục
+        'cart_stats': utils.count_cart(session.get('cart'))  # số lượng sp trong giỏ hàng
     }
 
 
@@ -167,6 +168,91 @@ def add_comment():
             'avatar': current_user.avatar
         }
     }}
+
+
+@app.route('/api/add-cart', methods=['post'])
+def add_to_cart():
+    data = request.json
+    id = str(data.get('id'))
+    name = data.get('name')
+    price = data.get('price')
+
+    cart = session.get('cart')
+    if not cart:    #kiểm tra có giỏ hàng chưa
+        cart = {}
+
+    if id in cart:  #kiểm tra xem sp đó có trong giỏ hàng chưa
+        cart[id]['quantity'] = cart[id]['quantity'] + 1
+    else:
+        cart[id] = {
+            'id': id,
+            'name': name,
+            'price': price,
+            'quantity': 1
+        }
+
+    session['cart'] = cart
+
+    return jsonify(utils.count_cart(cart))
+
+
+@app.route('/cart')
+@login_required
+def cart():
+    return render_template('cart.html',
+                           stats=utils.count_cart(session.get('cart')))
+
+
+@app.route('/api/update-cart', methods=['put']) #cập nhật thì dùng put
+def update_cart():  #cập nhật số lượng sp trong giỏ
+    data = request.json
+    id = str(data.get('id'))
+    quantity = data.get('quantity')
+
+    cart = session.get('cart')
+    if cart and id in cart:
+        cart[id]['quantity'] = quantity
+        session['cart'] = cart
+
+    return jsonify(utils.count_cart(cart))
+
+
+@app.route('/api/delete-cart/<room_id>', methods=['delete'])
+def delete_cart(room_id):    #xóa sp trong giỏ
+    cart = session.get('cart')
+
+    if cart and room_id in cart:
+        del cart[room_id]
+        session['cart'] = cart
+
+    return jsonify(utils.count_cart(cart))
+
+
+@app.route('/api/reservation', methods=['post'])
+@login_required     #bắt buộc đăng nhập mới được thực hiện
+def add_reservation():
+    # data = request.json
+    # room_id = data.get('room_id')
+    # user_id = data.get('user_id')
+    # checkin_date = data.get('checkin_date')
+    # checkout_date = data.get('checkout_date')
+    # person_name = data.get('person_name')
+    #
+    # try:
+    #     c = utils.add_reservation(room_id=room_id, user_id_id=user_id)
+    # except:
+    #     return {'status': 404, 'err_msg': 'Chương trình đang bị lỗi!!!'}
+    #
+    # return {'status': 201, 'comment': {
+    #     'id': c.id,
+    #     'content': c.content,
+    #     'created_date': c.created_date,
+    #     'user': {
+    #         'username': current_user.username,
+    #         'avatar': current_user.avatar
+    #     }
+    # }}
+    return render_template('reservation.html')
 
 
 if __name__ == '__main__':

@@ -14,7 +14,7 @@
         <h4>{{ error_msg }}</h4>
     </div>
     {% endif %}
-    <form method="post">
+    <form class="login" method="post">
         <div class="form-group">
             <label for="username">Username: </label>
             <input type="text" name="username" class="form-control"
@@ -26,9 +26,11 @@
                    id="pass" placeholder="Nhập mật khẩu..." required />
         </div>
 
-        <input type="submit" value="Đăng nhập" class="btn btn-success"/>
+        <input type="submit" value="Đăng nhập" class="btn-submit btn-success"/>
     </form>
-        <h6><a href="{{ url_for('register', next='user_signin') }}">Bạn chưa có tài khoản? Đăng ký tại đây!!</a></h6>
+
+    <h7><a href="{{ url_for('register', next='user_signin') }}">Bạn chưa có tài khoản? Đăng ký tại đây!!</a></h7>
+    <h7><a href="{{ url_for('home') }}">Quay về trang chủ</a></h7>
 </div>
 {% endblock %}
 

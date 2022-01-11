@@ -24,8 +24,23 @@ h1.subject{
     }
 }
 .containers{
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
+}
+
+.form-info {
+    width: 60%;
+    margin: 0 auto;
+}
+
+form.login {
+    width: 70%;
+    margin: 0 auto;
+}
+
+h7{
+    text-align: center;
+    display: block;
 }
 
 .nav-item {
@@ -36,10 +51,11 @@ h1.subject{
     align-items: center;
 }
 
-.btn {
+.btn-submit {
     padding: 10px;
     margin: 15px;
     display: block;
+    border-radius: 5px;
 }
 
 /*header*/
@@ -177,8 +193,9 @@ h2.detail a{
     text-decoration: none;
     border-radius: 5px;
 }
+
 /*rooms*/
-table.room{
+table.table-content {
     border-collapse: collapse;
     width: 100%;
     text-align: center;
@@ -186,11 +203,11 @@ table.room{
     margin-bottom: 15px;
 }
 
-table.room th {
+table.table-content th {
     padding: 10px;
 }
 
-table.room td {
+table.table-content td {
     padding: 10px;
 }
 
@@ -199,6 +216,21 @@ table.room td {
     margin: 15px auto;
     border: 1px solid #2aa22a;
     border-radius: 5px;
+}
+
+.menu-room {
+    width: 100%;
+}
+
+.menu-room button{
+    padding: 12px;
+    text-align: left;
+    color: black;
+}
+
+.menu-room button a {
+    text-decoration: none;
+    color: black;
 }
 
 /*room_detail*/
@@ -210,7 +242,8 @@ div.comment p{
     margin: 5px auto;
 }
 
-.form-info {
-    width: 70%;
+/*cart*/
+.button {
+    display: flex;
     margin: 0 auto;
 }

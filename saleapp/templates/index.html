@@ -8,7 +8,7 @@
     <input type="text" name="keyword" placeholder="Nhập từ khóa muốn tìm..." />
     <input type="number" name="from_price" placeholder="Nhập giá bắt đầu..." />
     <input type="number" name="to_price" placeholder="Nhập giá kết thúc..." />
-    <input type="submit" class="btn btn-outline-success" value="Tìm kiếm">
+    <input type="submit" class="btn-submit btn-outline-success" value="Tìm kiếm">
 </form>
 
 <div id="demo" class="carousel slide" data-ride="carousel">
@@ -44,7 +44,7 @@
 
 {% for c in categories %}
 <div id="{{ url_for('home', category_id=c.id) }}" class="container-fluid ">
-    <h2 id="cate-info{{ c.id }}" class="detail"><a href="javascript:;" id="{{ category_id }}">{{ c.name }}</a></h2>
+    <h2 id="cate-info{{ c.id }}" class="detail">{{ c.name }}</h2>
 
     {% for r in rooms %}
     {% if rooms and c.id==r.category_id %}
@@ -56,7 +56,7 @@
             <h4 class="card-title">{{ r.name }}</h4>
             <p class="card-text">{{ "{:,.0f}".format(r.price) }} VNĐ</p>
 
-            <a href="#" class="btn btn-primary" >Đặt phòng</a>
+            <a href="#" class="btn btn-primary" onclick="addToCart({{ r.id }}, '{{ r.name }}', {{ r.price }})">Thêm vào giỏ hàng</a>
             <a href="{{ url_for('room_detail', room_id=r.id) }}"  class="btn btn-outline-info" >Xem chi tiết</a>
           </div>
         </div>

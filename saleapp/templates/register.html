@@ -49,9 +49,11 @@
             <input type="file" name="avatar" class="form-control" id="avatar" />
         </div>
 
-        <input type="submit" value="Đăng ký" class="btn btn-danger"/>
+        <input type="submit" value="Đăng ký" class="btn-submit btn-danger"/>
     </form>
-        <h6><a href="{{ url_for('user_signin', next='register') }}">Bạn đã có tài khoản? Đăng nhập tại đây!!</a></h6>
+
+    <h7><a href="{{ url_for('user_signin', next='register') }}">Bạn đã có tài khoản? Đăng nhập tại đây!!</a></h7>
+    <h7><a href="{{ url_for('home') }}">Quay về trang chủ</a></h7>
 </div>
 {% endblock %}
 

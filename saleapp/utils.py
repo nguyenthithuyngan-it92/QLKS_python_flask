@@ -1,6 +1,6 @@
 import json, os
 from saleapp import app, db
-from saleapp.models import Category, Room, UserRole, User, Comment
+from saleapp.models import Category, Room, UserRole, User, Comment, ReservationDetail, RentDetail, ReceiptDetail
 import hashlib  #băm password
 from saleapp.models import User
 from flask_login import current_user
@@ -96,3 +96,27 @@ def count_comment(room_id):  #đếm số cmt của sp
     return Comment.query.filter(Comment.room_id.__eq__(room_id)).count()
 
 
+def count_cart(cart):   #đếm số sản phẩm có trong giỏ
+    total_quantity, total_amount = 0, 0     #amount~ tổng tiền trong giỏ
+
+    if cart:
+        for c in cart.values():
+            total_quantity += c['quantity']
+            total_amount += c['quantity'] * c['price']
+
+    return {
+        'total_quantity': total_quantity,
+        'total_amount': total_amount
+    }
+
+
+def add_reservation(room_id, user_id, checkin_date, **kwargs):
+    reservation = ReservationDetail(room_id=room_id,
+                                    user=current_user,
+                                    checkin_date=checkin_date,
+                                    checkout_date=kwargs.get('checkout_date'),
+                                    person_name=kwargs.get('person_name'),
+                                    customer=kwargs.get('customer'))
+
+    db.session.add(reservation)
+    db.session.commit()

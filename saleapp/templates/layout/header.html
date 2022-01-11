@@ -35,6 +35,13 @@
 
   <div class="collapse navbar-collapse d-flex justify-content-end align-items-center">
     <ul class="navbar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link text-info" href="{{ url_for('cart') }}">
+          GIỎ HÀNG<span class="badge badge-pill badge-info cart-counter" style="margin:5px">{{ cart_stats.total_quantity }}</span>
+        </a>
+      </li>
+
       {% if current_user.is_authenticated %}
       <li class="nav-item">
         <a class="nav-link text-primary" href="{{ url_for('home') }}">
@@ -60,7 +67,6 @@
         <a class="nav-link text-success" href="{{ url_for('user_signin') }}">ĐĂNG NHẬP</a>
       </li>
       {% endif %}
-
     </ul>
   </div>
 </nav>
