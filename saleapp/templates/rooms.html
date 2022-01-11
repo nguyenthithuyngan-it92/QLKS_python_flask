@@ -55,7 +55,10 @@
                     <td>{{ r.name }}</td>
                     <td>{{ r.description }}</td>
                     <td>{{ "{:,.0f}".format(r.price) }} VNĐ</td>
-                    <td><a href="{{ url_for('room_detail', room_id=r.id) }}"  class="btn btn-outline-info" >Xem chi tiết</a></td>
+                    <td>
+                        <a href="#" class="btn btn-outline-success" style="margin:10px">Đặt ngay</a>
+                        <a href="{{ url_for('room_detail', room_id=r.id) }}"  class="btn btn-outline-info" >Xem chi tiết</a>
+                    </td>
                 </tr>
                 {% endif %}
                 {% endfor %}
