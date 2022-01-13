@@ -56,7 +56,34 @@
             <h4 class="card-title">{{ r.name }}</h4>
             <p class="card-text">{{ "{:,.0f}".format(r.price) }} VNĐ</p>
 
-            <a href="#" class="btn btn-primary" onclick="addToCart({{ r.id }}, '{{ r.name }}', {{ r.price }})">Thêm vào giỏ hàng</a>
+            <a href="#" class="btn btn-primary" onclick="addToCart({{ r.id }}, '{{ r.name }}', {{ r.price }})"
+               data-toggle="modal" data-target="#myModal">Thêm vào giỏ hàng</a>
+              <!-- The Modal -->
+                <div class="modal" id="myModal">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+
+                      <!-- Modal Header -->
+                      <div class="modal-header">
+                        <h4 class="modal-title">Thông báo</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      </div>
+
+                      <!-- Modal body -->
+                      <div class="modal-body">
+                          Bạn đã thêm phòng {{ r.name }} vào giỏ hàng! Hãy vào giỏ hàng để xác nhận đặt phòng!!!
+                      </div>
+
+                      <!-- Modal footer -->
+                      <div class="modal-footer">
+                          <a class="nav-link text-info btn btn-outline-primary" href="{{ url_for('cart') }}">ĐẾN GIỎ HÀNG</a>
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">ĐÓNG</button>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              
             <a href="{{ url_for('room_detail', room_id=r.id) }}"  class="btn btn-outline-info" >Xem chi tiết</a>
           </div>
         </div>

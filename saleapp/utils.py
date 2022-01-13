@@ -1,10 +1,11 @@
 import json, os
 from saleapp import app, db
-from saleapp.models import Category, Room, UserRole, User, Comment, ReservationDetail, RentDetail, ReceiptDetail
+from saleapp.models import Category, Room, UserRole, User, Comment,Reservation, ReservationDetail
 import hashlib  #băm password
 from saleapp.models import User
 from flask_login import current_user
 from sqlalchemy import func
+from sqlalchemy.sql import extract
 
 
 def add_user(name, username, password, **kwargs):
@@ -110,13 +111,61 @@ def count_cart(cart):   #đếm số sản phẩm có trong giỏ
     }
 
 
-def add_reservation(room_id, user_id, checkin_date, **kwargs):
-    reservation = ReservationDetail(room_id=room_id,
-                                    user=current_user,
-                                    checkin_date=checkin_date,
-                                    checkout_date=kwargs.get('checkout_date'),
-                                    person_name=kwargs.get('person_name'),
-                                    customer=kwargs.get('customer'))
+def add_reservation(cart):
+    if cart:
+        reservation = Reservation(user=current_user)
+        db.session.add(reservation)
 
-    db.session.add(reservation)
-    db.session.commit()
+        for c in cart.values():
+            d = ReservationDetail(reservation=reservation,
+                                  room_id=c['id'],
+                                  quantity=c['quantity'],
+                                  unit_price=c['price'],
+                                  checkin_date=c['checkin_date'],
+                                  checkout_date=c['checkout_date'])
+
+            db.session.add(d)
+
+        db.session.commit()
+
+
+# def add_reservation(room_id, user_id, checkin_date, **kwargs):
+#     reservation = ReservationDetail(room_id=room_id,
+#                                     user=current_user,
+#                                     checkin_date=checkin_date,
+#                                     checkout_date=kwargs.get('checkout_date'),
+#                                     person_name=kwargs.get('person_name'),
+#                                     customer=kwargs.get('customer'))
+#
+#     db.session.add(reservation)
+#     db.session.commit()
+
+
+# def density_of_room_use_stats(month): #Thống kê mật độ sử dụng theo tháng
+#     p = db.session.query(Room.id, Room.name, extract('day', (RentDetail.checkout_date-RentDetail.checkin_date))+1)\
+#                 .join(RentDetail, RentDetail.room_id.__eq__(Room.id), isouter=True)\
+#                 .filter(extract('month', RentDetail.created_date) == month)\
+#                 .group_by(Room.id, Room.name, extract('day', (RentDetail.checkout_date-RentDetail.checkin_date))+1)\
+#                 .order_by(extract('day', (RentDetail.checkout_date-RentDetail.checkin_date))+1)
+#
+#     return p.all()
+#
+#
+# def room_month_stats(year): #Thống kê doanh thu theo tháng
+#     return db.session.query(Room.category_id, extract('month', RentDetail.created_date),
+#                               func.sum(RentDetail.quantity*ReceiptDetail.unit_price), func.count(RentDetail.id))\
+#                             .join(RentDetail, RentDetail.id.__eq__(ReceiptDetail.rent_id))\
+#                             .join(RentDetail, RentDetail.room_id.__eq__(Room.id))\
+#                             .filter(extract('year', RentDetail.created_date) == year)\
+#                             .group_by(Room.category_id, extract('month', RentDetail.created_date))\
+#                             .order_by(extract('month', RentDetail.created_date)).all()
+
+
+# def room_month_stats(month): #Thống kê doanh thu theo tháng
+#     return db.session.query(Room.id, Room.category_id, func.sum(RentDetail.quantity*ReceiptDetail.unit_price),
+#                             func.count(RentDetail.id), #(doanh thu * 100)/ tổng doanh thu )\
+#                             .join(ReceiptDetail, ReceiptDetail.rent_id.__eq__(RentDetail.id))\
+#                             .join(RentDetail, RentDetail.id.__eq__(Room.id))\
+#                             .filter(extract('month', RentDetail.created_date) == month)\
+#                             .group_by(Room.id, Room.category_id, extract('date', RentDetail.created_date))\
+#                             .order_by(extract('date', RentDetail.created_date)).all()

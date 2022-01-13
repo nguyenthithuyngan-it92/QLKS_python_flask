@@ -87,6 +87,18 @@ class LogoutView(AuthenticatedBaseView):  # đăng xuất
         return redirect('/admin')
 
 
+class StatsView(BaseView):
+    @expose('/')
+    def index(self):
+       # kw = request.args.get('kw')
+       # year = request.args.get('month', datetime.now().year)
+       month = request.args.get('month', datetime.now().month)
+
+       return self.render('admin/stats.html',
+                          # month_stats=utils.room_month_stats(year=year),
+                          stats=utils.density_of_room_use_stats(month=month))
+
+
 class MyAdminIndexView(AdminIndexView):
     @expose('/')
     def index(self):
@@ -103,5 +115,6 @@ admin.add_view(AuthenticatedModelView(Category, db.session, name='Loại phòng'
 admin.add_view(RoomView(Room, db.session, name='Phòng'))
 admin.add_view(CustomerView(Customer, db.session, name='Khách hàng'))
 admin.add_view(UserView(User, db.session, name='Người dùng'))
+admin.add_view(StatsView(name='Thống kê'))
 
 admin.add_view(LogoutView(name="Đăng xuất"))

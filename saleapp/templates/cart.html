@@ -7,11 +7,13 @@
 
 {% if 'cart' in session and session['cart'] %}
 <table class="table-content table-striped table-hover">
-    <tr>
+    <tr style="font-size:15px">
         <th>Mã phòng</th>
         <th>Tên phòng</th>
-        <th>Giá/phòng/2 người</th>
+        <th>Giá/ngày/2 người</th>
         <th>Số lượng</th>
+        <th>Ngày nhận</th>
+        <th>Ngày trả</th>
         <th></th>
 
     </tr>
@@ -25,7 +27,19 @@
                 <input type="number" class="form-control"
                        min="1"
                        value="{{ c.quantity }}" onblur="updateCart({{ c.id }}, this)"
-                       style="width:95%"/>
+                       style="width:75px"/>
+            </div>
+        </td>
+        <td>
+            <div class="form-group>">
+                <input type="date" class="form-control" style="width:175px"
+                       name="checkin_date" value="{{ c.checkin_date }}" />
+            </div>
+        </td>
+        <td>
+            <div class="form-group>">
+                <input type="date" class="form-control" style="width:175px"
+                       name="checkout_date" value="{{ c.checkout_date }}" />
             </div>
         </td>
         <td class="button">
@@ -38,16 +52,16 @@
 
 <div class="alert alert-info">
     <h6>Tổng số phòng đã chọn: <span class="cart-counter">{{ stats.total_quantity }}</span></h6>
-    <h6>Tổng tiền: <span id="total-amount">{{ "{:,.0f}".format(stats.total_amount) }}</span> VNĐ</h6>
+    <h6>Tổng tiền: <span id="total-amount">{{ "{:,.0f}".format(stats.total_amount) }}</span> VNĐ/ngày</h6>
 </div>
 
 {% if current_user.is_authenticated %}
-<input type="button" value="Xác nhận đặt phòng" class="btn-submit btn-success" href="{{ url_for('add_reservation') }}" />
+<input type="button" value="Xác nhận đặt phòng" class="btn-submit btn-success" onclick="reservation()" />
 {% else %}
     <a href="{{ url_for('user_signin', next='cart') }}">Đăng nhập để xác nhận đặt phòng...</a>
 {% endif %}
 
 {% else %}
-<p><i>Bạn chưa chọn phòng nào thêm vào giỏ!!!</i></p>
+<p><i>Bạn đã xác nhận đặt phòng thành công!!!</i></p>
 {% endif %}
 {% endblock %}

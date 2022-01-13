@@ -109,7 +109,7 @@ def user_signin():
                 error_msg = "Username hoặc mật khẩu chưa chính xác!!!"
 
         except Exception as ex:
-            error_msg = str(ex)
+            error_msg = "Hệ thống đang có lỗi" + str(ex)
 
     return render_template("login.html", error_msg=error_msg)
 
@@ -188,7 +188,9 @@ def add_to_cart():
             'id': id,
             'name': name,
             'price': price,
-            'quantity': 1
+            'quantity': 1,
+            'checkin_date': datetime.now(),
+            'checkout_date': datetime.now()
         }
 
     session['cart'] = cart
@@ -229,30 +231,43 @@ def delete_cart(room_id):    #xóa sp trong giỏ
 
 
 @app.route('/api/reservation', methods=['post'])
-@login_required     #bắt buộc đăng nhập mới được thực hiện
-def add_reservation():
-    # data = request.json
-    # room_id = data.get('room_id')
-    # user_id = data.get('user_id')
-    # checkin_date = data.get('checkin_date')
-    # checkout_date = data.get('checkout_date')
-    # person_name = data.get('person_name')
-    #
-    # try:
-    #     c = utils.add_reservation(room_id=room_id, user_id_id=user_id)
-    # except:
-    #     return {'status': 404, 'err_msg': 'Chương trình đang bị lỗi!!!'}
-    #
-    # return {'status': 201, 'comment': {
-    #     'id': c.id,
-    #     'content': c.content,
-    #     'created_date': c.created_date,
-    #     'user': {
-    #         'username': current_user.username,
-    #         'avatar': current_user.avatar
-    #     }
-    # }}
-    return render_template('reservation.html')
+@login_required
+def reservation():
+    try:
+        utils.add_reservation(session.get('cart'))
+        del session['cart']  #xóa tất cả sp trong giỏ sau khi thanh toán xong
+
+    except:
+        return jsonify({'code': 400})
+
+    return jsonify({'code': 200})
+
+
+# @app.route('/api/reservation', methods=['post'])
+# @login_required     #bắt buộc đăng nhập mới được thực hiện
+# def add_reservation():
+#     data = request.json
+#     room_id = data.get('room_id')
+#     user_id = data.get('user_id')
+#     checkin_date = data.get('checkin_date')
+#     checkout_date = data.get('checkout_date')
+#     person_name = data.get('person_name')
+#
+#     try:
+#         c = utils.add_reservation(room_id=room_id, user_id_id=user_id)
+#     except:
+#         return {'status': 404, 'err_msg': 'Chương trình đang bị lỗi!!!'}
+#
+#     return {'status': 201, 'comment': {
+#         'id': c.id,
+#         'content': c.content,
+#         'created_date': c.created_date,
+#         'user': {
+#             'username': current_user.username,
+#             'avatar': current_user.avatar
+#         }
+#     }}
+#     return render_template('reservation.html')
 
 
 if __name__ == '__main__':

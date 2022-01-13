@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-2 col-xs-12 menu-room" >
+    <div class="col-md-2 col-xs-12 menu-room sticky-top" >
         <button class="btn btn-secondary" data-toggle="collapse" data-target="#demo">Menu chức năng</button>
         <div id="demo" class="collapse">
             <div class="btn-group-vertical">
@@ -55,7 +55,11 @@
                     <td>{{ r.name }}</td>
                     <td>{{ r.description }}</td>
                     <td>{{ "{:,.0f}".format(r.price) }} VNĐ</td>
-                    <td><a href="{{ url_for('room_detail', room_id=r.id) }}"  class="btn btn-outline-info" >Xem chi tiết</a></td>
+                    <td>
+                        <a href="#" class="btn btn-primary" style="margin: 10px"
+                           onclick="addToCart({{ r.id }}, '{{ r.name }}', {{ r.price }})">Thêm vào giỏ</a>
+                        <a href="{{ url_for('room_detail', room_id=r.id) }}"  class="btn btn-outline-info" >Xem chi tiết</a>
+                    </td>
                 </tr>
                 {% endif %}
                 {% endfor %}

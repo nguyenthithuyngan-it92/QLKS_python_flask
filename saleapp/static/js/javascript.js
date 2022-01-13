@@ -102,3 +102,14 @@ function deleteCart(id) {
         }).catch(err => console.error(err))
     }
 }
+
+function reservation() {
+    if (confirm('Bạn có chắc chắn muốn xác nhận đặt phòng??') == true) {
+        fetch('/api/reservation', {
+            method: 'post'
+        }).then(res => res.json()).then(data => {
+            if (data.code == 200)
+                location.reload()
+        }).catch(err => console.error(err))
+    }
+}

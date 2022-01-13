@@ -39,7 +39,7 @@ class Room(BaseModel):
     created_date = Column(DateTime, default=datetime.now())
     category_id = Column(Integer, ForeignKey('category.id'), nullable=False)
 
-    reservationdetail = relationship('ReservationDetail', backref='room', lazy=True)
+    reservation_details = relationship('ReservationDetail', backref='room', lazy=True)
     comments = relationship('Comment', backref='room', lazy=True)
 
     def __str__(self):
@@ -59,7 +59,7 @@ class User(BaseModel, UserMixin):
     joined_date = Column(DateTime, default=datetime.now())
     user_role = Column(Enum(UserRole), default=UserRole.USER)
 
-    reservationdetail = relationship('ReservationDetail', backref='user', lazy=True)
+    reservation = relationship('Reservation', backref='user', lazy=True)
     receipt = relationship('ReceiptDetail', backref='user', lazy=True)
     comments = relationship('Comment', backref='user', lazy=True)
 
@@ -93,34 +93,49 @@ class Customer(BaseModel):
     address = Column(String(100))
     customertype_id = Column(Integer, ForeignKey('customertype.id'), nullable=False)
 
-    reservation_id = Column(Integer, ForeignKey('reservationdetail.id'), nullable=False, primary_key=True)
+    rent_id = Column(Integer, ForeignKey('rentdetail.id'), nullable=False)
+    # reservation_id = Column(Integer, ForeignKey('reservationdetail.id'), nullable=False, primary_key=True)
 
     def __str__(self):
         return self.name
 
 
-class ReservationDetail(BaseModel):  #phiếu đặt phòng
-    __tablename__ = 'reservationdetail'
+# class ReservationDetail(BaseModel):  #phiếu đặt phòng
+#     __tablename__ = 'reservationdetail'
+#
+#     # room_id = Column(Integer, ForeignKey('room.id'), nullable=False, primary_key=True)
+#     user_id = Column(Integer, ForeignKey(User.id), nullable=False, primary_key=True)
+#     created_date = Column(DateTime, default=datetime.now())
+#     # checkin_date = Column(DateTime, default=datetime.now())
+#     # checkout_date = Column(DateTime, default=datetime.now())
+#     # person_name = Column(String(100), nullable=False)
+#     # quantity = Column(Integer, default=0)
+#
+#     rent = relationship('RentDetail', backref='reservationdetail', lazy=True)
 
-    room_id = Column(Integer, ForeignKey('room.id'), nullable=False, primary_key=True)
-    user_id = Column(Integer, ForeignKey(User.id), nullable=False, primary_key=True)
+
+class Reservation(BaseModel):
+    created_date = Column(DateTime, default=datetime.now())
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
+
+    details = relationship('ReservationDetail', backref='reservation', lazy=True)
+
+
+class ReservationDetail(db.Model):
+    reservation_id = Column(Integer, ForeignKey(Reservation.id), nullable=False, primary_key=True)
+    room_id = Column(Integer, ForeignKey(Room.id), nullable=False, primary_key=True)
+    quantity = Column(Integer, default=0)
+    unit_price = Column(Float, default=0)
     checkin_date = Column(DateTime, default=datetime.now())
     checkout_date = Column(DateTime, default=datetime.now())
-    person_name = Column(String(100), nullable=False)
-
-    rent = relationship('RentDetail', backref='reservationdetail', lazy=True)
 
 
 class RentDetail(BaseModel): #phiếu thuê phòng
     __tablename__ = 'rentdetail'
 
-    reservation_id = Column(Integer, ForeignKey('reservationdetail.id'), nullable=False)
-    room_id = Column(Integer, ForeignKey('room.id'), nullable=False)
-    checkin_date = Column(DateTime, default=datetime.now())
-    checkout_date = Column(DateTime, default=datetime.now())
-    quantity = Column(Integer, default=0)
-    created_date = Column(DateTime, default=datetime.now())
+    reservation_id = Column(Integer, ForeignKey(ReservationDetail.reservation_id), nullable=False)
 
+    customer = relationship('Customer', backref='rentdetail', lazy=True)
     receipt = relationship('ReceiptDetail', backref='rentdetail', lazy=True)
 
 
