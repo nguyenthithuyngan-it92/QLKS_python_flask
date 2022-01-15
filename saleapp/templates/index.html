@@ -55,8 +55,15 @@
           <div class="card-body">
             <h4 class="card-title">{{ r.name }}</h4>
             <p class="card-text">{{ "{:,.0f}".format(r.price) }} VNĐ</p>
-
-            <a href="#" class="btn btn-primary" onclick="addToCart({{ r.id }}, '{{ r.name }}', {{ r.price }})"
+            <div class="card-date">
+                <label for="checkin_date-{{ r.id }}">Chọn ngày nhận</label>
+                <input type="date" required id="checkin_date-{{ r.id }}" name="checkin_date-{{ r.id }}"/>
+            </div>
+            <div class="card-date">
+                <label for="checkout_date-{{ r.id }}">Chọn ngày trả</label>
+                <input type="date" required id="checkout_date-{{ r.id }}" name="checkout_date-{{ r.id }}" />
+            </div>
+            <a href="#" class="btn card-btn btn-primary" onclick="addToCart({{ r.id }}, '{{ r.name }}', {{ r.price }})"
                data-toggle="modal" data-target="#myModal">Thêm vào giỏ hàng</a>
               <!-- The Modal -->
                 <div class="modal" id="myModal">

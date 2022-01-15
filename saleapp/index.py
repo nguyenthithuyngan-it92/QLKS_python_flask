@@ -44,13 +44,13 @@ def admin_login():
         if user:
             login_user(user=user)
 
-            return redirect('/admin')
+            return redirect(url_for(request.args.get('next', 'rooms_list')))
         else:
             error_msg = "Đăng nhập sai quyền! Vui lòng đăng nhập với quyền ADMIN!!!"
     except Exception as ex:
         error_msg = "Hệ thống đang có lỗi " + str(ex)
 
-    return render_template("login.html", error_msg=error_msg)
+    return render_template("admin/login.html", error_msg=error_msg)
 
 
 @app.route("/register", methods=['get', 'post'])
@@ -94,6 +94,7 @@ def user_signin():
             password = request.form.get('password')
 
             user = utils.check_login(username=username, password=password, role=UserRole.USER)
+            user_admin = utils.check_login(username=username, password=password, role=UserRole.ADMIN)
 
             if user:
                 login_user(user=user)
@@ -102,6 +103,9 @@ def user_signin():
                     return redirect(url_for(request.args.get('next', 'home'), room_id=request.args['room_id']))
 
                 return redirect(url_for(request.args.get('next', 'home')))
+
+            elif user_admin:
+                return redirect(url_for(request.args.get('next', 'rooms_list')))
 
             else:
                 error_msg = "Username hoặc mật khẩu chưa chính xác!!!"
@@ -129,7 +133,7 @@ def rooms_list():
                              from_price=from_price,
                              to_price=to_price)
 
-    return render_template("rooms.html",
+    return render_template("admin/rooms.html",
                            rooms=rooms)
 
 
@@ -174,6 +178,9 @@ def add_to_cart():
     id = str(data.get('id'))
     name = data.get('name')
     price = data.get('price')
+    checkinDate = data.get('checkinDate')
+    checkoutDate = data.get('checkoutDate')
+
 
     cart = session.get('cart')
     if not cart:    #kiểm tra có giỏ hàng chưa
@@ -187,8 +194,8 @@ def add_to_cart():
             'name': name,
             'price': price,
             'quantity': 1,
-            'checkin_date': datetime.now(),
-            'checkout_date': datetime.now()
+            'checkin_date': checkinDate,
+            'checkout_date': checkoutDate
         }
 
     session['cart'] = cart

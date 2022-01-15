@@ -69,20 +69,6 @@
 </script>
 
 {% else %}
-<h1 class="text-center text-info">ĐĂNG NHẬP NGƯỜI DÙNG QUẢN TRỊ</h1>
-<form method="POST" action="{{ url_for('admin_login') }}">
-  <div class="form-group">
-    <label for="username">Username:</label>
-    <input type="text" class="form-control" name="username"
-           placeholder="Nhập username..." id="username">
-  </div>
-  <div class="form-group">
-    <label for="password">Password:</label>
-    <input type="password" class="form-control" name="password"
-           placeholder="Enter password" id="password">
-  </div>
-
-  <button type="submit" class="btn btn-primary">ĐĂNG NHẬP</button>
-</form>
+  {% include 'admin/login.html' %}
 {% endif %}
 {% endblock %}

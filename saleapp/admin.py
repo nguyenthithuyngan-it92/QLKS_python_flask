@@ -87,7 +87,7 @@ class LogoutView(AuthenticatedBaseView):  # đăng xuất
         return redirect('/admin')
 
 
-class StatsView(BaseView):
+class StatsView(AuthenticatedBaseView):
     @expose('/')
     def index(self):
        # kw = request.args.get('kw')

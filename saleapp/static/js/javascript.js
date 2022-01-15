@@ -34,15 +34,21 @@ function addComment(roomId) {
     }
 }
 
+
 function addToCart(id, name, price) {
     event.preventDefault()
 
+    const checkinDate = document.getElementById(`checkin_date-${id}`)
+    const checkoutDate = document.getElementById(`checkout_date-${id}`)
+    console.log(checkinDate, checkoutDate)
     fetch('/api/add-cart', {
         method: 'post',
         body: JSON.stringify({
             'id': id,
             'name': name,
-            'price': price
+            'price': price,
+            'checkinDate': checkinDate.value,
+            'checkoutDate': checkoutDate.value
         }),
         headers: {
             'Content-Type': 'application/json'

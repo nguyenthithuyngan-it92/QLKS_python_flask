@@ -3,6 +3,7 @@
 {% block title %}Danh sách phòng{% endblock %}
 
 {% block content %}
+{% if current_user.is_authenticated %}
 <div class="row">
     <div class="col-md-2 col-xs-12 menu-room" >
         <button class="btn btn-secondary" data-toggle="collapse" data-target="#demo">Menu chức năng</button>
@@ -68,4 +69,7 @@
         {% endfor %}
     </div>
 </div>
+{% else %}
+  {% include 'admin/login.html' %}
+{% endif %}
 {% endblock %}
