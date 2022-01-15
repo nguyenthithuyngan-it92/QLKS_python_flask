@@ -71,7 +71,7 @@
 
                       <!-- Modal body -->
                       <div class="modal-body">
-                          Bạn đã thêm phòng {{ r.name }} vào giỏ hàng! Hãy vào giỏ hàng để xác nhận đặt phòng!!!
+                          Bạn đã thêm phòng <span class="text-danger">{{ r.name }}</span> vào giỏ hàng! Hãy vào giỏ hàng để xác nhận đặt phòng!!!
                       </div>
 
                       <!-- Modal footer -->
@@ -83,7 +83,7 @@
                     </div>
                   </div>
                 </div>
-              
+
             <a href="{{ url_for('room_detail', room_id=r.id) }}"  class="btn btn-outline-info" >Xem chi tiết</a>
           </div>
         </div>

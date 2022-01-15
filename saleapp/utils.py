@@ -129,18 +129,6 @@ def add_reservation(cart):
         db.session.commit()
 
 
-# def add_reservation(room_id, user_id, checkin_date, **kwargs):
-#     reservation = ReservationDetail(room_id=room_id,
-#                                     user=current_user,
-#                                     checkin_date=checkin_date,
-#                                     checkout_date=kwargs.get('checkout_date'),
-#                                     person_name=kwargs.get('person_name'),
-#                                     customer=kwargs.get('customer'))
-#
-#     db.session.add(reservation)
-#     db.session.commit()
-
-
 # def density_of_room_use_stats(month): #Thống kê mật độ sử dụng theo tháng
 #     p = db.session.query(Room.id, Room.name, extract('day', (RentDetail.checkout_date-RentDetail.checkin_date))+1)\
 #                 .join(RentDetail, RentDetail.room_id.__eq__(Room.id), isouter=True)\

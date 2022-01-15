@@ -12,9 +12,7 @@ from saleapp.models import UserRole
 def home():
     cate_id = request.args.get('category_id')
     kw = request.args.get('keyword')
-    # page = request.args.get('page', 1)
     rooms = utils.load_rooms(cate_id=cate_id, kw=kw)
-    # rooms = utils.load_rooms(cate_id=cate_id, kw=kw, page=int(page))
     # counter = utils.count_rooms()
 
     return render_template("index.html",
@@ -95,7 +93,7 @@ def user_signin():
             username = request.form.get('username')
             password = request.form.get('password')
 
-            user = utils.check_login(username=username, password=password)
+            user = utils.check_login(username=username, password=password, role=UserRole.USER)
 
             if user:
                 login_user(user=user)
@@ -128,8 +126,8 @@ def rooms_list():
     to_price = request.args.get("to_price")
 
     rooms = utils.load_rooms(cate_id=cate_id, kw=kw,
-                                   from_price=from_price,
-                                   to_price=to_price)
+                             from_price=from_price,
+                             to_price=to_price)
 
     return render_template("rooms.html",
                            rooms=rooms)
@@ -241,33 +239,6 @@ def reservation():
         return jsonify({'code': 400})
 
     return jsonify({'code': 200})
-
-
-# @app.route('/api/reservation', methods=['post'])
-# @login_required     #bắt buộc đăng nhập mới được thực hiện
-# def add_reservation():
-#     data = request.json
-#     room_id = data.get('room_id')
-#     user_id = data.get('user_id')
-#     checkin_date = data.get('checkin_date')
-#     checkout_date = data.get('checkout_date')
-#     person_name = data.get('person_name')
-#
-#     try:
-#         c = utils.add_reservation(room_id=room_id, user_id_id=user_id)
-#     except:
-#         return {'status': 404, 'err_msg': 'Chương trình đang bị lỗi!!!'}
-#
-#     return {'status': 201, 'comment': {
-#         'id': c.id,
-#         'content': c.content,
-#         'created_date': c.created_date,
-#         'user': {
-#             'username': current_user.username,
-#             'avatar': current_user.avatar
-#         }
-#     }}
-#     return render_template('reservation.html')
 
 
 if __name__ == '__main__':

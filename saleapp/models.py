@@ -134,6 +134,7 @@ class RentDetail(BaseModel): #phiếu thuê phòng
     __tablename__ = 'rentdetail'
 
     reservation_id = Column(Integer, ForeignKey(ReservationDetail.reservation_id), nullable=False)
+    created_date = Column(DateTime, default=datetime.now())
 
     customer = relationship('Customer', backref='rentdetail', lazy=True)
     receipt = relationship('ReceiptDetail', backref='rentdetail', lazy=True)
@@ -144,7 +145,9 @@ class ReceiptDetail(db.Model):  #hóa đơn
 
     rent_id = Column(Integer, ForeignKey('rentdetail.id'), nullable=False, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False, primary_key=True)
+    created_date = Column(DateTime, default=datetime.now())
     unit_price = Column(Float, default=0)
+    rate = Column(Float, default=0)
 
 
 # class Policy(BaseModel):
