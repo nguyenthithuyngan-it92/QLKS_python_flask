@@ -135,6 +135,7 @@ class RentDetail(BaseModel): #phiếu thuê phòng
 
     reservation_id = Column(Integer, ForeignKey(ReservationDetail.reservation_id), nullable=False)
     created_date = Column(DateTime, default=datetime.now())
+    active = Column(Boolean, default=True)
 
     customer = relationship('Customer', backref='rentdetail', lazy=True)
     receipt = relationship('ReceiptDetail', backref='rentdetail', lazy=True)
