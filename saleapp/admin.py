@@ -60,6 +60,7 @@ class UserView(BasicView):
 
 
 class CustomerTypeView(BasicView):
+    can_view_details = False
     can_create = True
     column_labels = {
         'id': 'Mã loại KH',
@@ -70,7 +71,7 @@ class CustomerTypeView(BasicView):
 
 class CustomerView(BasicView):
     can_create = False  #tắt chức năng tạo
-
+    can_delete = False
     column_searchable_list = ['name', 'identity_card']  # bật box tìm kiếm
     column_sortable_list = ['name']  # sắp xếp
     column_labels = {
@@ -100,12 +101,13 @@ class StatsView(AuthenticatedBaseView):
     @expose('/')
     def index(self):
        # kw = request.args.get('kw')
-       # year = request.args.get('month', datetime.now().year)
+       year = request.args.get('year', datetime.now().year)
        month = request.args.get('month', datetime.now().month)
 
        return self.render('admin/stats.html',
-                          # month_stats=utils.room_month_stats(year=year),
-                          stats=utils.density_of_room_use_stats(month=month))
+                          month_stats=utils.room_month_stats(month=month),
+                          stats1=utils.density_of_room_use_stats(month=month),
+                          total=utils.total_revenue(month=month))
 
 
 class MyAdminIndexView(AdminIndexView):

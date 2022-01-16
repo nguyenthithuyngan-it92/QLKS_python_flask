@@ -362,6 +362,58 @@ def reservation_to_rent(roomid):
                            reservations=reservations, time_checkin=time_checkin, time_checkout=time_checkout, room=room, roomid=roomid)
 
 
+#Thanh toán
+@app.route('/payment')
+@login_required
+def payment():
+    id = request.args.get('id')
+    rents = utils.load_rentdetails(id=id)
+    rooms = utils.load_room2()
+    reservations = utils.load_reservationdetails()
+    users = utils.load_user()
+    reservation = utils.load_reservation()
+
+    return render_template('payment.html', rentdetails=rents, rooms=rooms, reservationdetails=reservations,
+                           users=users, reservation=reservation)
+
+
+@app.route('/payment/<int:rent_id>', methods=['post', 'get'])
+@login_required
+def paydetail(rent_id):
+    err = ""
+    unit_price = 1
+    rate = 1
+    rent = utils.get_rent_by_id(rent_id)
+    rents = utils.load_rentdetails()
+    rooms = utils.load_room2()
+    reservations = utils.load_reservationdetails()
+    users = utils.load_user()
+    reservation = utils.load_reservation()
+    customers = utils.load_customer()
+    type = utils.load_customertype()
+    for r in rooms:
+        for d in rents:
+            for c in customers:
+                if rent.id == c.rent_id:
+                    for t in type:
+                        if rent.id == c.rent_id and t.id == c.customertype_id and d.room_id == r.id:
+                            if d.quantity == 2:
+                                unit_price = r.price * t.coefficient
+                            else:
+                                unit_price = r.price * t.coefficient * 1.25
+                        rate = t.coefficient
+    try:
+        utils.add_receipt(unit_price=unit_price, rent_id=rent.id, rate=rate)
+        utils.inactive_rent(rent.id)
+
+    except Exception as ex:
+            err = 'LỖI - ' + str(ex)
+
+    return render_template('paydetail.html', rentdetails=rents, rooms=rooms,  customers=customers, err=err, type=type,
+                           reservationdetails=reservations, users=users, reservation=reservation,
+                           rent=rent, unit_price=unit_price, rate=rate)
+
+
 if __name__ == '__main__':
     from saleapp.admin import *
 

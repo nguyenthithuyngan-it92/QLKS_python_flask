@@ -60,11 +60,6 @@ def load_rooms(cate_id=None, kw=None, from_price=None, to_price=None):
         rooms = rooms.filter(Room.price.__le__(to_price))
 
     return rooms.all()
-    # page_size = app.config['PAGE_SIZE']
-    # start = (page - 1) * page_size
-    # end = start + page_size
-
-    # return rooms.slice(start, end).all()
 
 
 def count_rooms():
@@ -129,7 +124,7 @@ def add_reservation(cart):
         db.session.commit()
 
 
-#Thuê phòng
+#---------------------Thuê phòng
 def load_customer_type():
     return CustomerType.query.all()
 
@@ -154,8 +149,8 @@ def load_room2():
     return Room.query.all()
 
 
-def load_customer():
-    return Customer.query.all()
+# def load_customer():
+#     return Customer.query.all()
 
 
 def load_rent_detail():
@@ -220,31 +215,71 @@ def delete_reservation(id):
     db.session.commit()
 
 
-# def density_of_room_use_stats(month): #Thống kê mật độ sử dụng theo tháng
-#     p = db.session.query(Room.id, Room.name, extract('day', (RentDetail.checkout_date-RentDetail.checkin_date))+1)\
-#                 .join(RentDetail, RentDetail.room_id.__eq__(Room.id), isouter=True)\
-#                 .filter(extract('month', RentDetail.created_date) == month)\
-#                 .group_by(Room.id, Room.name, extract('day', (RentDetail.checkout_date-RentDetail.checkin_date))+1)\
-#                 .order_by(extract('day', (RentDetail.checkout_date-RentDetail.checkin_date))+1)
-#
-#     return p.all()
-#
-#
-# def room_month_stats(year): #Thống kê doanh thu theo tháng
-#     return db.session.query(Room.category_id, extract('month', RentDetail.created_date),
-#                               func.sum(RentDetail.quantity*ReceiptDetail.unit_price), func.count(RentDetail.id))\
-#                             .join(RentDetail, RentDetail.id.__eq__(ReceiptDetail.rent_id))\
-#                             .join(RentDetail, RentDetail.room_id.__eq__(Room.id))\
-#                             .filter(extract('year', RentDetail.created_date) == year)\
-#                             .group_by(Room.category_id, extract('month', RentDetail.created_date))\
-#                             .order_by(extract('month', RentDetail.created_date)).all()
+#-----------------------------Thanh toán
+def load_rentdetails(id=None):
+    rent = RentDetail.query.filter(Room.active==True)
+
+    if id:
+        rent = rent.filter(RentDetail.id.__eq__(id))
+    return rent.all()
 
 
-# def room_month_stats(month): #Thống kê doanh thu theo tháng
-#     return db.session.query(Room.id, Room.category_id, func.sum(RentDetail.quantity*ReceiptDetail.unit_price),
-#                             func.count(RentDetail.id), #(doanh thu * 100)/ tổng doanh thu )\
-#                             .join(ReceiptDetail, ReceiptDetail.rent_id.__eq__(RentDetail.id))\
-#                             .join(RentDetail, RentDetail.id.__eq__(Room.id))\
-#                             .filter(extract('month', RentDetail.created_date) == month)\
-#                             .group_by(Room.id, Room.category_id, extract('date', RentDetail.created_date))\
-#                             .order_by(extract('date', RentDetail.created_date)).all()
+def load_user():
+    return User.query.all()
+
+
+def load_reservation():
+    return Reservation.query.all()
+
+
+def get_rent_by_id(rent_id):
+    return RentDetail.query.get(rent_id)
+
+
+def load_reservationdetails():
+    return ReservationDetail.query.all()
+
+
+def load_customer():
+    return Customer.query.all()
+
+
+def load_customertype():
+    return CustomerType.query.all()
+
+
+def add_receipt(unit_price, rent_id, rate):
+    receipt = ReceiptDetail(rent_id=rent_id,
+                            user=current_user,
+                            unit_price=unit_price,
+                            rate=rate)
+    db.session.add(receipt)
+    db.session.commit()
+
+
+def inactive_rent(rent_id):
+    r = get_rent_by_id(rent_id)
+    r.active = False
+    db.session.commit()
+
+
+#Thống kê
+def density_of_room_use_stats(month):   #Thống kê mật độ sử dụng theo tháng
+    p = db.session.query(Room.id, Room.name, (extract('day', RentDetail.checkout_date)-extract('day', RentDetail.checkin_date))+1)\
+                        .join(RentDetail, RentDetail.room_id.__eq__(Room.id), isouter=True)\
+                        .filter(extract('month', RentDetail.created_date) == month)\
+                        .group_by(Room.id, Room.name, (extract('day', RentDetail.checkout_date)-extract('day', RentDetail.checkin_date))+1)\
+                        .order_by(Room.id)
+
+    return p.all()
+
+
+def room_month_stats(month):    #Thống kê doanh thu theo tháng
+    return db.session.query(Room.category_id, func.sum(ReceiptDetail.unit_price), func.count(RentDetail.id))\
+                            .join(RentDetail, RentDetail.room_id.__eq__(Room.id))\
+                            .filter(extract('month', RentDetail.created_date) == month)\
+                            .group_by(Room.category_id).all()
+
+
+def total_revenue(month):   #tổng doanh thu
+    return db.session.query(func.sum(ReceiptDetail.unit_price)).filter(extract('month', RentDetail.created_date) == month).all()

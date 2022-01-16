@@ -93,9 +93,7 @@ class Customer(BaseModel):
     identity_card = Column(Integer, unique=True)
     address = Column(String(100))
     customertype_id = Column(Integer, ForeignKey('customertype.id'), nullable=False)
-
     rent_id = Column(Integer, ForeignKey('rentdetail.id'), nullable=False)
-    # reservation_id = Column(Integer, ForeignKey('reservationdetail.id'), nullable=False, primary_key=True)
 
     def __str__(self):
         return self.name
@@ -128,7 +126,6 @@ class RentDetail(BaseModel): #phiếu thuê phòng
     quantity = Column(Integer, default=0)
     checkin_date = Column(DateTime, default=datetime.now())
     checkout_date = Column(DateTime, default=datetime.now())
-
 
     customer = relationship('Customer', backref='rentdetail', lazy=True)
     receipt = relationship('ReceiptDetail', backref='rentdetail', lazy=True)

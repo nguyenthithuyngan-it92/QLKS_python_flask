@@ -5,21 +5,25 @@
 
 <div class = "row">
     <div class="col-md-6 col-xs-12">
-        <table class="table">
+        <table class="table" style="text-align:center">
             <tr>
                 <th>Mã phòng</th>
                 <th>Tên phòng</th>
                 <th>Số ngày thuê</th>
-<!--                <th>Tỷ lệ</th>-->
             </tr>
-             {% for s in stats %}
+            {% for s in stats1 %}
             <tr>
                 <td>{{ s[0] }}</td>
                 <td>{{ s[1] }}</td>
-                <td>{{ s[2] }}</td>
-<!--                <td>{{ s[3] }}</td>-->
+                <td>
+                    {% if s[2] %}
+                    {{ s[2] }}
+                    {% else %}
+                    0
+                    {% endif %}
+                </td>
             </tr>
-             {% endfor %}
+            {% endfor %}
         </table>
     </div>
     <div class="col-md-6 col-xs-12">
@@ -37,24 +41,31 @@
 <h1 class="text-center text-success">THỐNG KÊ DOANH THU THEO THÁNG </h1>
 <div class = "row">
       <div class="col-md-6 col-xs-12" >
-           <table class="table">
+           <table class="table" style="text-align:center">
                 <tr>
-<!--                    <th>Mã loại phòng</th>-->
-                    <th>Loại phòng</th>
+                    <th>Mã loại phòng</th>
                     <th>Doanh thu</th>
                     <th>Số lượt thuê</th>
-<!--                    <th>Tỷ lệ</th>-->
                 </tr>
+
                 {% for s in month_stats %}
                 <tr>
                     <td>{{ s[0] }}</td>
-                    <td>{{ s[1] }}</td>
-                    <td>{{ "{:,.0f}".format(s[2]) }} VND</td>
-                    <td>{{ s[3] }}</td>
-<!--                    <td>{{ s[4] }}</td>-->
+                    <td>{{ "{:,.0f}".format(s[1]) }} VNĐ</td>
+                    <td>{{ s[2] }}
+                    </td>
                 </tr>
                 {% endfor %}
            </table>
+          {% for t in total %}
+          <h3 style="color:red">Tổng doanh thu:
+            {% if t[0] %}
+            {{ "{:,.0f}".format(t[0]) }} VNĐ
+            {% else %}
+            0 VNĐ
+            {% endif %}
+          </h3>
+          {% endfor %}
       </div>
 
       <div class="col-md-6 col-xs-12" >
@@ -77,8 +88,9 @@
   let borderColors=[], borderColors2=[]
   let r, g, b
 
-  {% for s in stats %}  //thống kê theo mật độ sử dụng phòng
-    labels.push('{{ s[1] }}')
+  {% for s in stats1 %}  //thống kê mật độ sử dụng phòng
+    {% if s[2] %}
+    labels.push('{{s[1]}}')
     data.push({{ s[2] }})
 
      r = parseInt(Math.random()*255)
@@ -86,28 +98,29 @@
      b = parseInt(Math.random()*255)
     colors.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
     borderColors.push(`rgba(${r}, ${g}, ${b}, 1)`)
+    {% endif %}
   {% endfor %}
 
   {% for s in month_stats %}    //thống kê doanh thu
-    labels2.push('{{ s[1] }}')
-    data2.push({{ s[2] }})
+    labels2.push('{{ s[0] }}')
+    data2.push({{ s[1] }})
 
      r = parseInt(Math.random()*255)
      g = parseInt(Math.random()*255)
      b = parseInt(Math.random()*255)
     colors2.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
     borderColors2.push(`rgba(${r}, ${g}, ${b}, 1)`)
-  {% endfor %}
+    {% endfor %}
 
   window.onload = function() {
     const ctx = document.getElementById('roomChartId').getContext('2d')
     const ctx2 = document.getElementById('roomMonthChartId').getContext('2d')
 
-    loadChart(ctx, labels, data, 'bar', colors, boderColors)
-    loadChart(ctx2, labels2, data2, 'bar', colors2, boderColors2)
+    loadChart(ctx, labels, data, 'bar', colors, borderColors)
+    loadChart(ctx2, labels2, data2, 'bar', colors2, borderColors2)
   }
 
-function loadChart(ctx, labels, data, type, colors, boderColors) {
+function loadChart(ctx, labels, data, type, colors, borderColors) {
      const myChart = new Chart(ctx, {
       type: type,
       data: {
