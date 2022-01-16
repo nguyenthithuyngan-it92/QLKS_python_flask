@@ -175,10 +175,10 @@ def add_rent_detail(room_id, checkin_date, checkout_date, **kwargs):
 
 def add_customer(name, identity_card, customertype_id, rent_id, **kwargs):
     cus = Customer(name=name,
-                    rent_id=rent_id,
-                    identity_card=identity_card,
-                    customertype_id=customertype_id,
-                    address=kwargs.get('address'))
+                   rent_id=rent_id,
+                   identity_card=identity_card,
+                   customertype_id=customertype_id,
+                   address=kwargs.get('address'))
     db.session.add(cus)
     db.session.commit()
 
