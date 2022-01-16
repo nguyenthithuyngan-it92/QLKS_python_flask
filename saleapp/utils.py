@@ -1,6 +1,6 @@
 import json, os
 from saleapp import app, db
-from saleapp.models import Category, Room, UserRole, User, Comment,Reservation, ReservationDetail
+from saleapp.models import Category, Room, UserRole, User, Comment, Reservation, ReservationDetail, RentDetail, ReceiptDetail, Customer, CustomerType
 import hashlib  #băm password
 from saleapp.models import User
 from flask_login import current_user
@@ -127,6 +127,97 @@ def add_reservation(cart):
             db.session.add(d)
 
         db.session.commit()
+
+
+#Thuê phòng
+def load_customer_type():
+    return CustomerType.query.all()
+
+
+def load_reservation_detail():
+    re = ReservationDetail.query.filter(ReservationDetail.active.__eq__(True))
+    return re.all()
+
+
+def inactive_reservationdetail(id, roomid):
+    r = get_reservationdetail_by_id(id, roomid)
+    r.active = False
+    db.session.commit()
+
+
+def load_roomname():
+    rooms = Room.query.filter(Room.active.__eq__(True))
+    return rooms.all()
+
+
+def load_room2():
+    return Room.query.all()
+
+
+def load_customer():
+    return Customer.query.all()
+
+
+def load_rent_detail():
+    return RentDetail.query.all()
+
+
+def add_rent_detail(room_id, checkin_date, checkout_date, **kwargs):
+    rent = RentDetail(reservation_id=kwargs.get('reservation_id'),
+                      room_id=room_id,
+                      checkin_date=checkin_date,
+                      checkout_date=checkout_date,
+                      quantity=kwargs.get('quantity'),
+                      created_date=kwargs.get('created_date'))
+    db.session.add(rent)
+    db.session.commit()
+
+
+def add_customer(name, identity_card, customertype_id, rent_id, **kwargs):
+    cus = Customer(name=name,
+                    rent_id=rent_id,
+                    identity_card=identity_card,
+                    customertype_id=customertype_id,
+                    address=kwargs.get('address'))
+    db.session.add(cus)
+    db.session.commit()
+
+
+def inactive_room(room_id):
+    r = get_room_by_id(room_id)
+    r.active = False
+    db.session.commit()
+
+
+def get_rentdetail_by_id(id):
+    return RentDetail.query.get(id)
+
+
+def get_customer_in_rentdetail(idrent):
+    customer = RentDetail.query.filter(RentDetail.id.__eq__(idrent))
+    return customer.all()
+
+
+def get_reservationdetail_by_id(id, roomid):
+    reser = ReservationDetail.query.all()
+    for r in reser:
+        if r.room_id == roomid and r.reservation_id == id:
+            return r
+
+
+def check_add_customer(rentid):
+    rent = get_rentdetail_by_id(rentid)
+    quantity = Customer.query.filter(Customer.rent_id.__eq__(rentid)).count()
+    if quantity < rent.quantity:
+        return True
+    else:
+        return False
+
+
+def delete_reservation(id):
+    re = ReservationDetail.query.filter(ReservationDetail.reservation_id.__eq__(id))
+    db.session.delete(re)
+    db.session.commit()
 
 
 # def density_of_room_use_stats(month): #Thống kê mật độ sử dụng theo tháng

@@ -38,8 +38,8 @@ function addComment(roomId) {
 function addToCart(id, name, price) {
     event.preventDefault()
 
-    const checkinDate = document.getElementById(`checkin_date-${id}`)
-    const checkoutDate = document.getElementById(`checkout_date-${id}`)
+    const checkinDate = document.getElementById(`checkin_date`)
+    const checkoutDate = document.getElementById(`checkout_date`)
     console.log(checkinDate, checkoutDate)
     fetch('/api/add-cart', {
         method: 'post',

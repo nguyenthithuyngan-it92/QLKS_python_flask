@@ -58,7 +58,8 @@ h7{
     border-radius: 5px;
 }
 
-/*header*/
+
+/*---------------------header------------------------*/
 .nav-link {
     font-size: 15px;
 }
@@ -86,8 +87,7 @@ a:hover.dropdown-item{
 }
 
 
-
-/*footer*/
+/*-------------------------footer-------------------*/
 h5{
     margin: 0;
     padding: 10px;
@@ -129,7 +129,8 @@ iframe{
     margin: 15px 0;
 }
 
-/*index*/
+
+/*----------------index--------------------------*/
 .search {
     padding: 15px;
     margin: 0 auto;
@@ -184,7 +185,7 @@ div:hover.info {
     padding: 20px 10px 10px 20px;
 }
 
-h2.detail a{
+h2.detail {
     display: block;
     margin: 0 auto;
     padding: 10px;
@@ -196,11 +197,24 @@ h2.detail a{
     border-radius: 5px;
 }
 
-.card-date label {
-    min-width: 90px;
+h4.card-title {
+    font-weight: bold;
+    color: rgb(46, 184, 46);
+}
+.card-date {
+    width: 100%;
+    margin: 0 auto;
 }
 
-/*rooms*/
+.card-date label {
+    font-size: 20px;
+    margin: 0 auto;
+    padding: 10px;
+    font-weight: bold;
+}
+
+
+/*--------------------------rooms------------------------------*/
 table.table-content {
     border-collapse: collapse;
     width: 100%;
@@ -239,7 +253,7 @@ table.table-content td {
     color: black;
 }
 
-/*room_detail*/
+/*------------------------------room_detail------------------------*/
 .row {
     padding: 10px;
 }
@@ -248,8 +262,128 @@ div.comment p{
     margin: 5px auto;
 }
 
-/*cart*/
+
+/*------------------cart-----------------------------*/
 .button {
     display: flex;
     margin: 0 auto;
+}
+
+/*---------------------------Trang rent_detail-------------------------*/
+.rent_detail {
+    width: 60%;
+    margin: 25px auto;
+    padding: 4% 7% 4% 7%;
+    border: solid 0.3px;
+    border-radius: 7px;
+    border-color: #D7DCE1;
+    background: #CCFFCC;
+}
+
+.btsave {
+    margin-left: 33%;
+}
+
+.select{
+    width: 100%;
+    display: flex;
+}
+
+.selectname{
+    width: 35%;
+    float: left;
+}
+
+.selected {
+    width: 65%;
+}
+
+.selected > select {
+    width: 100%;
+}
+
+.space {
+    margin: 40px;;
+}
+
+
+/*---------------------------Trang savecustomer-------------------------*/
+.customer {
+     width: 76%;
+     margin: 4% 12% 4% 12%;
+     padding: 2% 4% 4% 4%;
+     background-color: #F7F9B1;
+     /*background: linear-gradient(120deg, #F7F9B1, #CCFFCC);*/
+     border-radius: 8px;
+}
+
+.info_room {
+    width: 100%;
+    border: solid 0.3px;
+    border-radius: 5px;
+    border-color: #D7DCE1;
+    padding: 4% 5% 2% 5%;
+    background-color: white;
+}
+
+.parent_tb_customer {
+    width: 100%;
+    padding: 2%;
+    background-color: white;
+    border: solid 0.3px;
+    border-radius: 4px;
+    border-color: #D7DCE1;
+}
+
+.tb_customer {
+    width: 100%;
+    background-color: white;
+}
+
+table.tb_customer tr {
+    text-align: center;
+}
+
+div.re_detail td {
+   padding: 10px;
+   border: solid 0.3px;
+   border-color: #D7DCE1;
+}
+
+.btsave2 {
+    margin-left: 40%;
+}
+
+
+/*---------------------Trang reservation-----------------------------*/
+.re_detail {
+    width: 90%;
+    margin: 0 auto;
+    padding-bottom: 15px;
+}
+
+div.re_detail tr{
+    text-align: center;
+}
+.btheader {
+    width: 10%;
+}
+
+.header {
+    font-weight: bold;
+    background: #CCFFCC;
+}
+
+
+/*--------------------Trang reservation_to _rent--------------------------*/
+.select2 {
+    background-color: white;
+    padding: 1% 5% 1% 5%;
+    border: solid 0.3px;
+    border-radius: 5px;
+    border-color: #D7DCE1;
+}
+
+.select1 {
+    padding-top: 1%;
 }

@@ -1,5 +1,5 @@
 from saleapp import db, app, utils
-from saleapp.models import Category, Room, UserRole, Customer, User
+from saleapp.models import Category, Room, UserRole, Customer, User, CustomerType
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import BaseView, expose, Admin, AdminIndexView
 from flask_login import logout_user, current_user, login_user
@@ -59,6 +59,15 @@ class UserView(BasicView):
     }
 
 
+class CustomerTypeView(BasicView):
+    can_create = True
+    column_labels = {
+        'id': 'Mã loại KH',
+        'name': 'Tên loại khách hàng',
+        'coefficient': 'Hệ số'
+    }
+
+
 class CustomerView(BasicView):
     can_create = False  #tắt chức năng tạo
 
@@ -70,7 +79,7 @@ class CustomerView(BasicView):
         'address': 'Địa chỉ',
         'identity_card': 'Số CMND/CCCD',
         'customertype': 'Loại KH',
-        'reservation': 'Mã phiếu thuê phòng'
+        'rentdetail': 'Mã phiếu thuê phòng'
     }
 
 
@@ -113,6 +122,7 @@ admin = Admin(app=app, name='Administrator',
 
 admin.add_view(AuthenticatedModelView(Category, db.session, name='Loại phòng'))
 admin.add_view(RoomView(Room, db.session, name='Phòng'))
+admin.add_view(CustomerTypeView(CustomerType, db.session, name='Loại khách'))
 admin.add_view(CustomerView(Customer, db.session, name='Khách hàng'))
 admin.add_view(UserView(User, db.session, name='Người dùng'))
 admin.add_view(StatsView(name='Thống kê'))

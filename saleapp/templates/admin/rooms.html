@@ -12,8 +12,8 @@
               <button type="button" class="btn btn-outline-secondary">
                   <a href="#list_room">Danh sách phòng</a>
               </button>
-              <button type="button" class="btn btn-outline-secondary">Lập phiếu thuê</button>
-              <button type="button" class="btn btn-outline-secondary">Thanh toán</button>
+              <button type="button" class="btn btn-outline-secondary"><a href="/reservation">Phiếu đặt phòng</a></button>
+              <button type="button" class="btn btn-outline-secondary"><a href="/rent_detail">Lập phiếu thuê</a></button>               <button type="button" class="btn btn-outline-secondary">Thanh toán</button>
               <button type="button" class="btn btn-outline-secondary">
                   <a href="/admin">Trang quản trị</a>
               </button>
@@ -35,7 +35,7 @@
 
         {% for c in categories %}
         <div id="{{ url_for('home', category_id=c.id) }}" class="container-fluid-rooms">
-            <h2 id="cate-info{{ c.id }}" class="detail"><a href="javascript:;" id="{{ category_id }}">{{ c.name }}</a></h2>
+            <h2 id="cate-info{{ c.id }}" class="detail">{{ c.name }}</h2>
             <table class="table-content table-striped table-hover" >
                 <tr>
                     <th></th>

@@ -42,6 +42,13 @@
   </a>
 </div>
 
+<div class="card-date">
+    <label for="checkin_date">Chọn ngày nhận</label>
+    <input type="date" required="required" id="checkin_date" name="checkin_date" style="width:300px; padding:10px;"/>
+    <label for="checkout_date">Chọn ngày trả</label>
+    <input type="date" required="required" id="checkout_date" name="checkout_date" style="width:300px; padding:10px;"/>
+</div>
+
 {% for c in categories %}
 <div id="{{ url_for('home', category_id=c.id) }}" class="container-fluid ">
     <h2 id="cate-info{{ c.id }}" class="detail">{{ c.name }}</h2>
@@ -55,14 +62,7 @@
           <div class="card-body">
             <h4 class="card-title">{{ r.name }}</h4>
             <p class="card-text">{{ "{:,.0f}".format(r.price) }} VNĐ</p>
-            <div class="card-date">
-                <label for="checkin_date-{{ r.id }}">Chọn ngày nhận</label>
-                <input type="date" required id="checkin_date-{{ r.id }}" name="checkin_date-{{ r.id }}"/>
-            </div>
-            <div class="card-date">
-                <label for="checkout_date-{{ r.id }}">Chọn ngày trả</label>
-                <input type="date" required id="checkout_date-{{ r.id }}" name="checkout_date-{{ r.id }}" />
-            </div>
+
             <a href="#" class="btn card-btn btn-primary" onclick="addToCart({{ r.id }}, '{{ r.name }}', {{ r.price }})"
                data-toggle="modal" data-target="#myModal">Thêm vào giỏ hàng</a>
               <!-- The Modal -->
@@ -86,7 +86,6 @@
                           <a class="nav-link text-info btn btn-outline-primary" href="{{ url_for('cart') }}">ĐẾN GIỎ HÀNG</a>
                           <button type="button" class="btn btn-danger" data-dismiss="modal">ĐÓNG</button>
                       </div>
-
                     </div>
                   </div>
                 </div>

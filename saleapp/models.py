@@ -40,6 +40,7 @@ class Room(BaseModel):
     category_id = Column(Integer, ForeignKey('category.id'), nullable=False)
 
     reservation_details = relationship('ReservationDetail', backref='room', lazy=True)
+    rent_details = relationship('RentDetail', backref='room', lazy=True)
     comments = relationship('Comment', backref='room', lazy=True)
 
     def __str__(self):
@@ -100,20 +101,6 @@ class Customer(BaseModel):
         return self.name
 
 
-# class ReservationDetail(BaseModel):  #phiếu đặt phòng
-#     __tablename__ = 'reservationdetail'
-#
-#     # room_id = Column(Integer, ForeignKey('room.id'), nullable=False, primary_key=True)
-#     user_id = Column(Integer, ForeignKey(User.id), nullable=False, primary_key=True)
-#     created_date = Column(DateTime, default=datetime.now())
-#     # checkin_date = Column(DateTime, default=datetime.now())
-#     # checkout_date = Column(DateTime, default=datetime.now())
-#     # person_name = Column(String(100), nullable=False)
-#     # quantity = Column(Integer, default=0)
-#
-#     rent = relationship('RentDetail', backref='reservationdetail', lazy=True)
-
-
 class Reservation(BaseModel):
     created_date = Column(DateTime, default=datetime.now())
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
@@ -128,13 +115,19 @@ class ReservationDetail(db.Model):
     unit_price = Column(Float, default=0)
     checkin_date = Column(DateTime, default=datetime.now())
     checkout_date = Column(DateTime, default=datetime.now())
+    active = Column(Boolean, default=True)
 
 
 class RentDetail(BaseModel): #phiếu thuê phòng
     __tablename__ = 'rentdetail'
 
-    reservation_id = Column(Integer, ForeignKey(ReservationDetail.reservation_id), nullable=False)
+    reservation_id = Column(Integer, ForeignKey(ReservationDetail.reservation_id), nullable=True)
+    room_id = Column(Integer, ForeignKey(Room.id), nullable=False)
     created_date = Column(DateTime, default=datetime.now())
+    active = Column(Boolean, default=True)
+    quantity = Column(Integer, default=0)
+    checkin_date = Column(DateTime, default=datetime.now())
+    checkout_date = Column(DateTime, default=datetime.now())
 
     customer = relationship('Customer', backref='rentdetail', lazy=True)
     receipt = relationship('ReceiptDetail', backref='rentdetail', lazy=True)
@@ -148,12 +141,6 @@ class ReceiptDetail(db.Model):  #hóa đơn
     created_date = Column(DateTime, default=datetime.now())
     unit_price = Column(Float, default=0)
     rate = Column(Float, default=0)
-
-
-# class Policy(BaseModel):
-#     __abstract__ = True
-#
-#     name = Column(String(50), nullable=False)
 
 
 if __name__ == '__main__':

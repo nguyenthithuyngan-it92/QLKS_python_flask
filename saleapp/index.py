@@ -23,7 +23,9 @@ def home():
 def general_info(): #thông tin chung cần hiển thị mọi trang
     return {
         'categories': utils.load_categories(),  #ds danh mục
-        'cart_stats': utils.count_cart(session.get('cart'))  # số lượng sp trong giỏ hàng
+        'cart_stats': utils.count_cart(session.get('cart')),  # số lượng sp trong giỏ hàng
+        'customertype_id': utils.load_customer_type(),
+        'reservations': utils.load_reservation_detail()
     }
 
 
@@ -181,7 +183,6 @@ def add_to_cart():
     checkinDate = data.get('checkinDate')
     checkoutDate = data.get('checkoutDate')
 
-
     cart = session.get('cart')
     if not cart:    #kiểm tra có giỏ hàng chưa
         cart = {}
@@ -246,6 +247,119 @@ def reservation():
         return jsonify({'code': 400})
 
     return jsonify({'code': 200})
+
+
+#Thuê phòng
+@app.route('/rent_detail', methods=['post', 'get'])
+def rent_detail():
+    err_msg = ""
+    rooms = utils.load_roomname()
+
+    if request.method.__eq__('POST'):
+        checkin = request.form.get('checkin_date')
+        checkout = request.form.get('checkout_date')
+        quantity = request.form.get('quantity')
+        room_id = request.form.get('room_id')
+        try:
+            utils.add_rent_detail(room_id=room_id, checkin_date=checkin,
+                                  checkout_date=checkout, quantity=quantity)
+            utils.inactive_room(room_id)
+            return redirect(url_for('savecustomer'))
+        except Exception as ex:
+            err_msg = 'LỖI - ' + str(ex)
+    return render_template('rent_detail.html', rooms=rooms, err_msg=err_msg)
+
+
+@app.route('/savecustomer', methods=['post', 'get'])
+def savecustomer():
+    max = 0
+    err_msg = ""
+    reservations = utils.load_reservation_detail()
+    rooms = utils.load_roomname()
+    rent = utils.load_rent_detail()
+    for i in rent:
+        if i.id > max:
+            max = i.id
+    r = utils.get_rentdetail_by_id(max)
+    room_getname = utils.get_room_by_id(r.room_id)
+    if request.method.__eq__('POST'):
+        name = request.form.get('cname')
+        identity_card = request.form.get('identity_card')
+        customertype_id = request.form.get('customertype_id')
+        address = request.form.get('address')
+
+        name2 = request.form.get('cname2')
+        identity_card2 = request.form.get('identity_card2')
+        customertype_id2 = request.form.get('customertype_id2')
+        address2 = request.form.get('address2')
+
+        name3 = request.form.get('cname3')
+        identity_card3 = request.form.get('identity_card3')
+        customertype_id3 = request.form.get('customertype_id3')
+        address3 = request.form.get('address3')
+
+        try:
+            if utils.check_add_customer(r.id) == False:
+                err_msg = "Đã lưu đủ số lượng khách hàng trên phiếu thuê phòng!!!"
+            else:
+                utils.add_customer(name=name, rent_id=r.id, identity_card=identity_card,
+                                   customertype_id=customertype_id, address=address)
+                if r.quantity == 2:
+                    utils.add_customer(name=name2, rent_id=r.id, identity_card=identity_card2,
+                                       customertype_id=customertype_id2, address=address2)
+                if r.quantity == 3:
+                    utils.add_customer(name=name2, rent_id=r.id, identity_card=identity_card2,
+                                       customertype_id=customertype_id2, address=address2)
+                    utils.add_customer(name=name3, rent_id=r.id, identity_card=identity_card3,
+                                       customertype_id=customertype_id3, address=address3)
+                return redirect(url_for('rooms_list'))
+        except Exception as ex:
+            err_msg = 'LỖI - ' + str(ex)
+    return render_template('savecustomer.html', rooms=rooms, reservations=reservations, rent=rent, r=r, err_msg=err_msg, room_getname=room_getname)
+
+
+@app.route('/reservation', methods=['post', 'get'])
+def all_reservation():
+    reservations = utils.load_reservation_detail()
+    room = utils.load_room2()
+    return render_template('reservation.html', reservations=reservations, room=room)
+
+
+@app.route("/rentdetail/<int:roomid>", methods=['post', 'get'])
+def reservation_to_rent(roomid):
+    user = 0
+    re_id = 0
+    err_msg = ""
+    customers = utils.load_customer()
+    reservations = utils.load_reservation_detail()
+    for r in reservations:
+        if roomid == r.room_id:
+            re_id = r.reservation_id
+    reservation_detail = utils.get_reservationdetail_by_id(re_id, roomid)
+    room = utils.get_room_by_id(reservation_detail.room_id)
+    timein = str(reservation_detail.checkin_date)
+    timeout = str(reservation_detail.checkout_date)
+    t_in = timein.split()
+    t_out = timeout.split()
+    time_checkin = t_in[0] + "T" + t_in[1]
+    time_checkout = t_out[0] + "T" + t_out[1]
+
+    if request.method.__eq__('POST'):
+        checkin = request.form.get('checkin')
+        checkout = request.form.get('checkout')
+        quantity = request.form.get('quantity')
+        try:
+            utils.add_rent_detail(reservation_id=reservation_detail.reservation_id, room_id=roomid,
+                                  checkin_date=checkin, checkout_date=checkout, quantity=quantity)
+            utils.inactive_reservationdetail(re_id, roomid)
+            utils.inactive_room(roomid)
+
+            return redirect(url_for('savecustomer'))
+        except Exception as ex:
+            err_msg = 'LỖI - ' + str(ex)
+
+    return render_template('reservation_to_rent.html', reservation_detail=reservation_detail, customers=customers, err_msg=err_msg,
+                           reservations=reservations, time_checkin=time_checkin, time_checkout=time_checkout, room=room, roomid=roomid)
 
 
 if __name__ == '__main__':
