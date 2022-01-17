@@ -20,7 +20,6 @@
  {% for r in rentdetails %}
     {% if r.active == true %}
     <div class="container-fluid ">
-<!--    <h2 class="detail" id="rent_id" name="rent_id">P{{ r.id }}</h2>-->
       <div class="info">
         <div class="card" >
           <div class="card-body">
@@ -39,11 +38,13 @@
         </div>
       </div>
     </div>
+    {% else %}
+        <i><h6>Không có phiếu cần thanh toán!!!</h6></i>
     {% endif %}
  {% endfor %}
 {% else %}
     <i><del><h6>Không tồn tại mã phòng này!!!</h6></del></i>
     <br>
 {% endif %}
-
+<h7 style="padding:15px"><a href="{{ url_for('rooms_list') }}">Quay về trang danh sách phòng</a></h7>
 {% endblock %}

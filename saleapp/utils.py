@@ -1,5 +1,7 @@
 import json, os
 from saleapp import app, db
+
+import datetime
 from saleapp.models import Category, Room, UserRole, User, Comment, Reservation, ReservationDetail, RentDetail, ReceiptDetail, Customer, CustomerType
 import hashlib  #băm password
 from saleapp.models import User
